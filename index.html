@@ -7,6 +7,13 @@
   <link rel="stylesheet" href="css/styles.css" type="text/css">
 </head>
 <body>
+  <nav class="site-nav" aria-label="Primary">
+    <ul>
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="https://google.com" target="_blank" rel="noreferrer">Nav example</a></li>
+      <li><a href="https://github.com" target="_blank" rel="noreferrer">stored on github</a></li>
+    </ul>
+  </nav>
   <header>
     <h1>The weather and UPS suck too</h1>
     <p>All of that damn ice is making my iphone 13 PM i bought online late and UPS is shipping it and they just layed off like 30k people</p>
@@ -113,8 +120,10 @@
 	<li>For external links use target _blank and noopener noreferrer</li>
 	<li>title gives a optional tooltip</li>
 	<li>download downloads the file</li>
-    <a href="https://youtube.com/@moricalliope" target="_blank" rel="noreferrer">Example</a>
-    <a href="index.html" download>Download the html</a> 
+      </ul>
+      <ul class="ex-link">
+        <li><a href="https://youtube.com/@moricalliope" target="_blank" rel="noreferrer">Example</a></li>
+        <li><a href="index.html" download>Download the html</a></li>
     </section>
     <section>
       <h2>Nav menus</h2>
@@ -122,13 +131,25 @@
 	<li>use lists to group the links</li>
 	<li>use aria-label to give screen readers a description</li>
       </ul>
+    </section>
+    <section>
+      <h2>States and Transitions</h2>
+      <ul>
+	<li>.active class to represent current page</li>
+	<li>:hover :focus and :focus-visible help keyboard users<code>(people who can't use a mouse or psycos)</code></li>
+	<li>use transition for smoother color changes</li>
+      </ul>
+    </section>
+    <section>
+      <h2>Responsive Menus</h2>
+      <ul>
+	<li>For mobile convert horizontal menus into vertical stacks</li>
+	<li>use a menu button and JS for more complex patterns</li>
+      </ul>
+    </section>
   </main>
   <footer>
-    <nav>
-      <ul>
-	<li><a href="https://google.com" target="_blank" rel="noreferrer">Nav example</a></li>
-	<li><a href="https://github.com" target="_blank" rel="noreferrer">stored on github</a></li>
-    <p>Built with ❤ using HTML & CSS.</p>
+    <p>No copyright at all! <code>(for this page)</code></p>
   </footer>
 </body>
 </html>

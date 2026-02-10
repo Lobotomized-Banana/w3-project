@@ -44,9 +44,53 @@ section h2 {
   border-collapse:collapse;
 }
 
+.ex-link {
+  list-style:none;
+  display:flex;
+  gap:12;
+  padding:0;
+  margin:0;
+}
+
+.ex-link a {
+  padding:6px 6px;
+  display:inline-block;
+  border-radius:24px;
+  color:#000;
+  gap:0;
+  margin:0;
+  text-decoration:none;
+}
+
+.ex-link a:hover, .ex-link a:focus {
+  color:#fff;
+  background:#ff2627;
+}
+
 footer {
-  padding: 24px;
-  text-align: center;
-  background: #e8edf4;
-  font-size: 0.9rem;
+  padding:12px;
+  text-align:center;
+  background:#e8edf4;
+  font-size:0.9rem;
+}
+
+.site-nav ul {
+  display:flex;
+  gap:0;
+  list-style:none;
+  padding:0;
+  margin:0;
+}
+
+.site-nav a {
+  display:block;
+  border-radius:0px;
+  color:#000;
+  padding:6px 6px;
+  text-decoration:none;
+}
+
+.site-nav a:hover, .site-nav a.active, .site-nav a:focus {
+  background:#ff2627;
+  color:#fff;
 }

@@ -58,3 +58,32 @@ main ul {
 main img {
   max-width:40%;
 }
+
+footer {
+  padding:12px;
+  text-align:center;
+  background:#e8edf4;
+  font-size:0.9rem;
+}
+
+.btn {
+  padding:12px 12px;
+  text-decoration:none;
+  border-radius:24px;
+  display:inline-block;
+}
+
+.btn-solid {
+  background:#ff2627;
+  color:#fff;
+}
+
+.btn-clear {
+  color:#000;
+  border:2px solid #ff2627;
+}
+
+.btn-clear:hover {
+  background:#ff2627;
+  color:#fff;
+}

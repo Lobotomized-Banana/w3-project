@@ -70,7 +70,7 @@
     </section>
     <section>
       <h2>Basic Lists</h2>
-      <ul>
+      <ul class="list-sec">
 	<li>use ul for bullets</li>
       </ul>
       <ol>
@@ -144,6 +144,51 @@
       <ul>
 	<li>For mobile convert horizontal menus into vertical stacks</li>
 	<li>use a menu button and JS for more complex patterns</li>
+      </ul>
+    </section>
+    <section>
+      <h2>Images and Media</h2>
+      <ul>
+	<li>use the img tag with src to add the image and alt to provide a description for screen reades and width is used to set the width taken by the image</li>
+	<li>in the CSS use max-width to set the image to be a percentage of the container width useful for keeping pages consistent across screen size</li>
+	<li>use height:auto to keep the aspect ratio the same when scaled</li>
+	<li>use the picture tag with the source tag to use a different picture by view size</li>
+	<li>use media in the source tag to determine what size the larger img should</li>
+	<li>use srcset to set the img according to media's condition</li>
+	<li>use img on the next line normaly for the smaller picture and giving the alt</li>
+	<li>the audio and video tags allow for the playback of video/audio files natively in browser</li>
+	<li>use poster to display a preview before playback</li>
+	<li>set what type of file is being played with type</li>
+	<li>write a message for if the browser doesnt support media playback natively</li>
+	<li>wrap any video embeds (youtube) in a container to keep aspect ratio</li>
+	<li>use absolute positioning on the iframe to fill the container and 56.25% padding-bottom on the container to keep 16:9 aspect<li>
+	<li>use lazy loading to speed up the loading of the page initally with nothing cached use on images later on the page</li>
+	<li>use figure and figcaption to add accessibility</li>  
+      </ul>
+    </section>
+    <section>
+      <h2>Forms and Validation</h2>
+      <ul>
+	<li>use the form tag to wrap the form</li>
+	<li>use action to tell where to send the form</li>
+	<li>use method to use a POST or GET request</li>
+	<li>use the atributes name and autocomplete to help the browser</li>
+	<li>label elements need a id on inputs to work and use a for to specify</li>
+	<li>use required atribute to make the input needed to submit</li>
+	<li>use aria-describedby for helper text</li>
+	<li>group related controls with fieldset and legend</li>
+	<li>use all of the standard CSS to make the form have styling consistant with your page or not</li>
+	<li>use input:valid/invalid to mark valid and invalid inputs with aria-invalid to improve accessibility</li>
+	<li>use grid or flexbox to align labels and inputs</li>
+	<li>Use HTTPS so data is encrypted and use server side validation and prevent CSRF and XSS attacks when handleing submissions and SQL injection if you use SQL so sanitize your inputs</li>
+      </ul>
+    </section>
+    <section>
+      <h2>Reuseable Components</h2>
+      <ul>
+	<li>Use meaning full class names</li>
+	<li>Scope styles to prevent side effects</li>
+	<li>for buttons use a base with CSS consistant across all buttons and then add variants to the base</li>
       </ul>
     </section>
   </main>

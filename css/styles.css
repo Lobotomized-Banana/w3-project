@@ -1,23 +1,27 @@
 * {
   box-sizing: border-box;
 }
+
 body {
   font-family: "SN Pro";
   margin: 0;
   background: #f4f7fb;
   color: #253238;
 }
+
 header {
   background: linear-gradient(120deg, #ff2627, #000);
   color: #fff;
   padding: 60px 20px;
   text-align: center;
 }
+
 main {
   max-width: 960px;
   margin: 0 auto;
   padding: 40px 20px;
 }
+
 section {
   background: #fff;
   border-radius: 12px;
@@ -26,9 +30,18 @@ section {
   color: #000
   box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
 }
+
 section h2 {
   margin-top: 0;
   color: #ff2627;
+}
+
+section ul {
+  list-style:none;
+}
+
+.list-sec {
+  list-style:disc inside;
 }
 .mori {
   overflow:hidden;

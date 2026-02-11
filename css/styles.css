@@ -110,20 +110,42 @@ footer a {
   background:linear-gradient(90deg, #ff2627, #000);
 }
 
-.site-nav a {
-  display:block;
+.btn {
+  display:inline-block;
   border-radius:6px;
   border-style:solid;
-  color:#000;
-  background
   padding:6px 6px;
   margin:2px;
   text-decoration:none;
+  border-color:#000;
+  color:#000
 }
 
-.site-nav a:hover, .site-nav a.active, .site-nav a:focus {
+.btn-red {
   background:#ff2627;
-  color:#000;
-  
 }
 
+.btn-clear {
+  background:rgba(0, 0, 0, 0);
+}
+
+.active {
+  background:#ff2627;
+}
+
+.btn:hover, .btn:focus {
+  background:#ffa8a9;
+  color:#fff;
+}
+
+.imgs {
+  max-width:100%;
+}
+
+.img-list {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px;
+  gap:10px;
+}

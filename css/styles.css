@@ -10,7 +10,7 @@ body {
 }
 
 header {
-  background: linear-gradient(120deg, #ff2627, #000);
+  background: linear-gradient(90deg, #ff2627, #000);
   color: #fff;
   padding: 60px 20px;
   text-align: center;
@@ -20,6 +20,7 @@ main {
   max-width: 960px;
   margin: 0 auto;
   padding: 40px 20px;
+  background:linear-gradient(90deg,#ff2627, #000);
 }
 
 section {
@@ -83,8 +84,9 @@ section ul {
 footer {
   padding:12px;
   text-align:center;
-  background:#e8edf4;
+  background:linear-gradient(90deg, #ff2627, #000);
   font-size:0.9rem;
+  color:#fff;
 }
 
 footer a {
@@ -104,15 +106,24 @@ footer a {
   margin:0;
 }
 
+.site-nav {
+  background:linear-gradient(90deg, #ff2627, #000);
+}
+
 .site-nav a {
   display:block;
-  border-radius:0px;
+  border-radius:6px;
+  border-style:solid;
   color:#000;
+  background
   padding:6px 6px;
+  margin:2px;
   text-decoration:none;
 }
 
 .site-nav a:hover, .site-nav a.active, .site-nav a:focus {
   background:#ff2627;
-  color:#fff;
+  color:#000;
+  
 }
+

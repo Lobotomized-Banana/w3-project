@@ -10,7 +10,7 @@ body {
 }
 
 header {
-  background: linear-gradient(90deg, #ff2627, #000);
+ 
   color: #fff;
   padding: 60px 20px;
   text-align: center;
@@ -20,16 +20,20 @@ main {
   max-width: 960px;
   margin: 0 auto;
   padding: 40px 20px;
-  background:linear-gradient(90deg,#ff2627, #000);
 }
 
 section {
-  background: #fff;
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 24px;
-  color: #000
-  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    color: #000;
+    opacity: 0;
+    transition: opacity 0.6s cubic-bezier(0.40,0.00,1.00,1.00);
+}
+
+section.visible {
+  opacity: 1;
 }
 
 section h2 {
@@ -44,47 +48,29 @@ section ul {
 .list-sec {
   list-style:disc inside;
 }
-.mori {
+.table {
   overflow:hidden;
   background:#fff;
-  border-width:0px;
-  border-radius:12.5px;
-  border-color:#000;
-}
-.mori thead {
-  background:#ff2627;
-  color:#fff;
-  border-color:#ff2627;
   border-collapse:collapse;
 }
-
-.ex-link {
-  list-style:none;
-  display:flex;
-  gap:12;
-  padding:0;
-  margin:0;
-}
-
-.ex-link a {
-  padding:6px 6px;
-  display:inline-block;
-  border-radius:24px;
-  color:#000;
-  gap:0;
-  margin:0;
-  text-decoration:none;
-}
-
-.ex-link a:hover, .ex-link a:focus {
-  color:#fff;
+table, th, td {
   background:#ff2627;
+  color:#fff;
+  border-style:solid;
+  border-color:#000;
+  border-width:3px;
+  padding:0px 3px;
+  gap:0px;
+}
+
+td {
+  background:#fff;
+  color:#000;
 }
 
 footer {
   padding:12px;
   text-align:center;
-  background:linear-gradient(90deg, #ff2627, #000);
   font-size:0.9rem;
   color:#fff;
 }
@@ -106,19 +92,15 @@ footer a {
   margin:0;
 }
 
-.site-nav {
-  background:linear-gradient(90deg, #ff2627, #000);
-}
-
 .btn {
-  display:inline-block;
-  border-radius:6px;
-  border-style:solid;
-  padding:6px 6px;
-  margin:2px;
-  text-decoration:none;
-  border-color:#000;
-  color:#000
+    display: inline-block;
+    border-radius: 6px;
+    border-style: solid;
+    padding: 6px 6px;
+    margin: 2px;
+    text-decoration: none;
+    border-color: #000;
+    color: #000;
 }
 
 .btn-red {
@@ -130,12 +112,12 @@ footer a {
 }
 
 .active {
-  background:#ff2627;
+  background:#ffa8a9;
 }
 
-.btn:hover, .btn:focus {
-  background:#ffa8a9;
-  color:#fff;
+.btn:hover:not(.active), .btn:focus:not(.active) {
+    color: #fff;
+    animation: colorFade .25s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
 }
 
 .imgs {
@@ -148,4 +130,57 @@ footer a {
   align-items:center;
   padding:10px;
   gap:10px;
+}
+
+.btn-fade {
+    background:#000;
+    transition: background .25s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.btn-fade:hover {
+    background:#fff;
+}
+
+
+
+@keyframes colorFade {
+    0% {
+        background-color:#ff2627;
+    }
+
+    100% {
+        background-color:#ffa8a9;
+    }
+}
+
+.blurred-gradient {
+    position: relative;
+    /* Your content styles here */
+}
+
+.blurred-gradient::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, #ff2627 0%, #000 100%);
+  filter: blur(20px);
+  z-index: -1;
+}
+
+.shadow {
+    position: relative;
+}
+
+.shadow::before {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  border-radius: 12px;
+  background: linear-gradient(200deg, #ff2627 0%, #fff 100%);
+  filter: blur(20px);
+  opacity: .75;
+  z-index: -1;
 }

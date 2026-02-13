@@ -23,10 +23,8 @@
     <ul> 
       <li><a href="index.html" class="active btn">Home</a></li>
       <li><a href="images.html" class="btn btn-clear">Images</a></li>
+      <li><button id="theme-toggle" class="theme-toggle">🌙 Dark Mode</button></li>
     </ul>
-    <div class="theme-btn">
-      <button id="theme-toggle" class="theme-toggle">🌙 Dark Mode</button>
-    </div>
   </nav>
   <header class="blurred-gradient">
     <h1>Idk what to put here</h1>
@@ -35,7 +33,7 @@
   <main class="blurred-gradient">
     <section class="card red-card shadow">
       <h2>Head Metadata</h2>
-      <ul>
+      <ul class="list-nosty">
         <li>charset  defines the character set</li>
 	<li>name="viewport" makes layouts responsive</li>
 	<li>link stylesheet attaches CSS</li>
@@ -46,7 +44,7 @@
     </section>
     <section class="card red-card shadow">
       <h2>Layout containers</h2>
-      <ul>
+      <ul class="list-nosty">
         <li>header for branding/navigation</li>
         <li>nav for navigation links</li>
         <li>main is for the pages unique content</li>
@@ -56,13 +54,13 @@
     </section>
     <section class="card red-card shadow">
       <h2>Organizing CSS</h2>
-      <ul>
+      <ul class="list-nosty">
 	<li>link the css file in the head before the page renders and for critical css that <strong>MUST</strong> load immediately you can inline it</li>
       </ul>
     </section>
     <section class="card red-card shadow">
       <h2>Accessibility hooks</h2>
-      <ul>
+      <ul class="list-nosty">
 	<li>add lang on the html tag for screen readers</li>
 	<li>heading for each section otherwise aria-label</li>
 	<li>keep headings in order h1->h2->h3 to describe hierarchy</li>
@@ -70,7 +68,7 @@
     </section>
     <section class="card red-card shadow">
       <h2>Text Content</h2>
-      <ul>
+      <ul class="list-nosty">
 	<li>use 1 h1 followed by h2 h3 and on to improve SEO and accessibility this file is a perfect example of what not to do</li>
 	<li>p wraps paragraphs of text</li>
 	<li>br inserts a line break use sparingly</li>
@@ -85,20 +83,20 @@
     </section>
     <section class="card red-card shadow">
       <h2>Basic Lists</h2>
-      <ul class="list-sec">
+      <ul class="list-disc">
 	<li>use ul for bullets</li>
       </ul>
       <ol>
 	<li>and ol for numbers</li>
       </ol>
-      <ul>
+      <ul class="list-nosty">
 	<li>each item goes in the li tag</li>
 	<li>use list-style padding and flexbox to style lists with CSS</li>
       </ul>
     </section>
     <section class="card red-card shadow">
       <h2>Description List</h2>
-      <ul>
+      <ul class="list-nosty">
 	<li>dl makes a description list</li>
 	<li>dt is a term</li>
 	<li>and dd is for glossaries or metadata</li>

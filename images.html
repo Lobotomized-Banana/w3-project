@@ -4,34 +4,47 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Cool imgs</title>
-  <link rel="stylesheet" href="css/styles.css" type="text/css">
+  <link rel="stylesheet" href="css/components/theme.css">
+  <link rel="stylesheet" href="css/components/theme-toggle.css">
+  <link rel="stylesheet" href="css/base.css" type="text/css">
+  <link rel="stylesheet" href="css/components/table.css">
+  <link rel="stylesheet" href="css/components/header.css">
+  <link rel="stylesheet" href="css/components/footer.css">
+  <link rel="stylesheet" href="css/components/card.css">
+  <link rel="stylesheet" href="css/components/list.css">
+  <link rel="stylesheet" href="css/components/navigation.css">
+  <link rel="stylesheet" href="css/components/button.css">
+  <link rel="stylesheet" href="css/components/image.css">
+  <link rel="stylesheet" href="css/components/effects.css">
+  <script src="scripts/theme-toggle.js" defer></script>
 </head>
 <body class="blurred-gradient">
-  <nav class="site-nav">
+  <nav class="site-nav blurred-gradient" aria-label="Primary">
       <ul>
-	    <li><a href="index.html" class="btn btn-clear">Home</a></li>
-	    <li><a href="images.html" class="btn active">Images</a></li>
+	<li><a href="index.html" class="btn btn-clear">Home</a></li>
+	<li><a href="images.html" class="btn active">Images</a></li>
+	<li><button id="theme-toggle" class="theme-toggle">🌙 Dark Mode</button</li>
       </ul>
   </nav>
   <header>
     <h1>This has a bunch of arts of Vtubers and anime characters in sections</h1>
   </header>
   <main>
-    <section class="fade shadow">
+    <section class="card red-card shadow">
       <h2>Mori Calliope</h2>
       <ul class="img-list">
-	    <li><img src=assets/imgs/mori1.jpg alt="Mori Calliope" class="imgs"><br><a href="https://x.com/2nochuu/status/2020359044679233924" target="_blank" rel="noreferrer">Made by @2nochuu on Twiter</a></li>
+	<li><img src=assets/imgs/mori1.jpg alt="Mori Calliope" class="imgs"><br><a href="https://x.com/2nochuu/status/2020359044679233924" target="_blank" rel="noreferrer">Made by @2nochuu on Twiter</a></li>
         <li><img src=assets/imgs/mori2.jpg alt="Mori Calliope" class="imgs"><br><a href="https://x.com/Criisalys/status/1968794281109319792" target="_blank" rel="noreferrer">Made by @Criisalys on Twitter</a></li>
       </ul>
     </section>
-    <section class="fade shadow">
+    <section class="card red-card shadow">
       <h2>Koseki Bijou</h2>
       <ul class="img-list">
-	    <li><img src=assets/imgs/biboo1.jpg alt="Koseki Bijou" class="imgs" loading="lazy"><br><a href="https://x.com/LogicMoko/status/2015082548955865486" target="_blank" rel="noreferer">Made by @LogicMoko on twitter</a></li>
-	    <li><img src=assets/imgs/biboo2.jpg alt="Koseki Bijou" class="imgs" loading="lazy"><br><a href="https://x.com/Kama_boko17/status/2001941048541790584" target="_blank" rel="noreferer">Made by @Kama_boko17 on Twitter</a></li>
+	<li><img src=assets/imgs/biboo1.jpg alt="Koseki Bijou" class="imgs" loading="lazy"><br><a href="https://x.com/LogicMoko/status/2015082548955865486" target="_blank" rel="noreferer">Made by @LogicMoko on twitter</a></li>
+	<li><img src=assets/imgs/biboo2.jpg alt="Koseki Bijou" class="imgs" loading="lazy"><br><a href="https://x.com/Kama_boko17/status/2001941048541790584" target="_blank" rel="noreferer">Made by @Kama_boko17 on Twitter</a></li>
       </ul>
     </section>
-    <section class="fade shadow">
+    <section class="card red-card shadow">
       <h2>Manhattan Cafe</h2>
       <ul class="img-list">
         <li><img src=assets/imgs/cafe1.jpg alt="Manhattan Cafe" class="imgs" loading="lazy"><br><a href="https://x.com/sea_Pall/status/2020684341328892355" target="_blank" rel="noreferrer">Made by @sea_Pall on Twitter</a></li>
@@ -43,6 +56,5 @@
     <p>I dont own the copyright for any of these images and credit is provided when creator is known</p>
     <a href="https://github.com/Lobotomized-Banana/w3-project" target="_blank" rel="noreferrer" class="btn btn-red">stored on github</a>
   </footer>
-<script src="scripts/fade.js"></script>
 </body>
 </html>

@@ -1,0 +1,15 @@
+.card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    color: var(--text-secondary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px px rgba(0, 0, 0, 0.1);
+}
+
+.red-card h2 {
+  margin-top: 0;
+  color: var(--primary-red);
+}

@@ -1,0 +1,12 @@
+.card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    color: #000;
+}
+
+.red-card h2 {
+  margin-top: 0;
+  color: #ff2627;
+}

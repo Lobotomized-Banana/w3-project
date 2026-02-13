@@ -1,0 +1,21 @@
+footer {
+  padding:12px;
+  text-align:center;
+  font-size:0.9rem;
+  color: var(--text-inverse);
+  background: transparent;
+}
+
+footer a {
+  display:inline-block;
+  padding:12px 12px;
+  text-decoration:none;
+  border-radius:24px;
+  background: var(--primary-red);
+  color: var(--text-inverse);
+  transition: background-color 0.3s ease;
+}
+
+footer a:hover {
+  background: var(--primary-red-light);
+}

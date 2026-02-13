@@ -1,0 +1,31 @@
+/* Theme Toggle Button */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  background: var(--toggle-bg);
+  color: var(--toggle-text);
+  border: 2px solid var(--toggle-border);
+  border-radius: 24px;
+  cursor: pointer;
+  font-family: "SN Pro";
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(255, 38, 39, 0.2);
+}
+
+.theme-toggle:hover {
+  background: var(--toggle-bg-hover);
+  border-color: var(--toggle-border-hover);
+  color: #fff;
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(255, 38, 39, 0.4);
+}
+
+.theme-toggle:active {
+  transform: scale(0.95);
+}

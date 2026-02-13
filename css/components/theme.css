@@ -1,0 +1,82 @@
+/* Theme Variables */
+:root {
+  /* Primary brand color - consistent across themes */
+  --primary-red: #ff2627;
+  --primary-red-light: #ffa8a9;
+  
+  /* Light theme colors */
+  --bg-primary: #f4f7fb;
+  --bg-secondary: #fff;
+  --bg-tertiary: #e8ecf1;
+  --text-primary: #253238;
+  --text-secondary: #000;
+  --text-inverse: #fff;
+  --border-color: #000;
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --shadow-from: #000;
+  --shadow-to: #ff2627;
+
+  /* Gradient colors for unified background */
+  --gradient-start: #ff2627;
+  --gradient-mid: #fff;
+  --gradient-end: #f4f7fb;
+
+  --toggle-bg: rgba(42, 42, 42, 0.95);
+  --toggle-text: #e8e8e8;
+  --toggle-border: #ff2627;
+  --toggle-bg-hover: #ff2627;
+  --toggle-border-hover: #ff2627;
+}
+ 
+/* Dark theme colors */
+[data-theme="dark"] {
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #1a1a1a;
+  --bg-tertiary: #2a2a2a;
+  --text-primary: #e8e8e8;
+  --text-secondary: #f0f0f0;
+  --text-inverse: #fff;
+  --border-color: #ff2627;
+  --card-bg: rgba(42, 42, 42, 0.95);
+  --shadow-from: #ff2627;
+  --shadow-to: #000;
+
+  /* Gradient colors for unified background */
+  --gradient-start: #ff2627;
+  --gradient-mid: #1a1a1a;
+  --gradient-end: #0a0a0a;
+
+  --toggle-bg: rgba(42, 42, 42, 0.95);
+  --toggle-text: #e8e8e8;
+  --toggle-border: #ff2627;
+  --toggle-bg-hover: #ff2627;
+  --toggle-border-hover: #ff2627;
+}
+
+/* Optional: Media query for system preference */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg-primary: #0a0a0a;
+    --bg-secondary: #1a1a1a;
+    --bg-tertiary: #2a2a2a;
+    --text-primary: #e8e8e8;
+    --text-secondary: #f0f0f0;
+    --text-inverse: #fff;
+    --border-color: #ff2627;
+    --card-bg: rgba(42, 42, 42, 0.95);
+    --shadow-from: #ff2627;
+    --shadow-to: #000;
+   
+    /* Gradient colors for unified background */
+    --gradient-start: #ff2627;
+    --gradient-mid: #1a1a1a;
+    --gradient-end: #0a0a0a;
+  
+    /* Theme toggle button colors */
+    --toggle-bg: rgba(42, 42, 42, 0.95);
+    --toggle-text: #e8e8e8;
+    --toggle-border: #ff2627
+    --toggle-bg-hover: #ff2627;
+    --toggle-border-hover: #ff2627;
+ }  
+}

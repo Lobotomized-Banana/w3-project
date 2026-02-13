@@ -1,0 +1,41 @@
+.btn {
+    display: inline-block;
+    border-radius: 6px;
+    border-style: solid;
+    padding: 6px 6px;
+    margin: 2px;
+    text-decoration: none;
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.btn-red {
+  background: var(--primary-red);
+  border-color: var(--primary-red);
+  color: var(--text-inverse);
+}
+
+.btn-clear {
+  background:rgba(0, 0, 0, 0);
+}
+
+.active {
+  background: var(--primary-red-light);
+  border-color: var(--primary-red-light);
+}
+
+.btn:hover:not(.active), .btn:focus:not(.active) {
+    color: var(--text-inverse);
+    animation: colorFade .25s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+}
+
+.btn-fade {
+    background: var(--text-secondary);
+    transition: background .25s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.btn-fade:hover {
+    background: var(--bg-secondary);
+}

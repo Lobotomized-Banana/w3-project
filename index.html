@@ -208,8 +208,81 @@
       <h2>Css Styling Essentials</h2>
       <ul class="list-nosty">
 	<li>Css controls how your site looks and makes it not ugly black and white text <code>(and even can make functioning filing cabinets</code></li>
+	<li>Css is a set of rules applyed to the html elements</li>
+	<li>Each rule is a selector and a set of declerations</li>
+	<li>For example the css rule making this section round is "border-radius: 24px"</li>
+	<li>The browser reads the stylesheets from top to bottom and resolves conflicts with the casccade<code>thats the C in CSS</code></li>
+	<li>use link rel stylesheet href css/location to link a external style sheet <code>every bit of css on both pages</code></li>
+	<li>use style in the head <code>ew whats wrong with you</code></li>
+	<li>Inline style="" use it only for major things that will break the page if not loaded <code>and if a user has dial-up in 2026</code></li>
+	<li>There are 4 types of selector a type class id and attribute this site only really uses classes for the most part and types with classes for ease of use and editing the css</li>
+	<li>Each declaration has a name and value ending with a semicolon for example <code>padding: 24px;</code></li>
+	<li>Rules later override the first ones when you use the same or more specificity for example in the button.css file the .btn class background is transparent but the btn-red class has the themes primary-red value as the background</li>
+	<li>Inline styles override the externals</li>
+	<li>Some properties are inherited from parent elements such as color and fonts</li>
+	<li>Only use !important as a last resort</li>
+	<li>To specify color use hex codes like #ff2627 rgb values like 255 38 39 1.0 or hsl values im too lazy find that reds hsl value</li>
+	<li>You can change fonts the size of them and the weight like 400 for normal text or 700 for boldline height letter spacing and text alignment can be changed too</li>
+	<li>Use margin for the outside space and padding for the inside space along with border</li>
+	<li>display determins how the elments are aranged by your browser <code>and are really specifically non specific</code></li>
+	<li>Block inline inline-block are the basic ones flex and grid are the new more fancy kids of the family</li> 
       </ul>
     </section>
+    <section class="card red-card shadow">
+      <h2>Selectors & Specificity</h2>
+      <ul>
+	<li>Use * for everything because w3 didnt say it back in the last section</li>
+	<li>Look above for the other selectors</li>
+	<li>Combinators such as .card p descendant .card > h3 direct child h2 + p adjacent sibling h2 - p general sibling</li>
+	<li>Use tag:psuedo-class for stuff like my buttons <code>.btn:hover</code> for a btn class when hovered on</li>
+	<li>Inline styes matter most than id selectors then classes/atributes and lastly type and pseudo-element</li>
+	<li>Write the least specific stuff first then become more specific</li>
+	<li>Use inspect element to fix when you forget a single angle bracket and it breaks the whole thing</li> 
+      </ul>
+    </section>
+    <section class="card red-card shadow">
+      <h2>Cascade & Inheritance</h2>
+      <ul>
+	<li>The cascade is figured out in 3 parts first origin and !imprortant for importance</li>
+	<li>Then specificity</li>
+	<li>And last the order</li>
+	<li>Inheritance is auto for some things like color but not for things like padding</li>
+	<li>Use inherit to you know what use initial to resert it to the obvious and revert to go to user agent style</li>
+	<li>Specificity is counted as inline ids classes/attributes elements</li>
+	<li>The !important overrides normal cascade so dont spam it everywhere use it to unbreak the page then do it like a real coder and remove it after making claude do the work</li>
+	<li>If you want to do the fixing yourself use inspect elements styles tab to see the rules and where they come from</li>
+      </ul>
+    </section>
+    <section class="card red-card shadow">
+      <h2>HTML & CSS Typography</h2>
+      <ul>
+	<li>Typography controls how text looks</li>
+	<li>Change fonts to system fonts for better performance or use web hosted fonts like google fonts</li>
+	<li>Set a base font on body and use some fallbacks or dont I didnt and you are reading this arent you?</li>
+	<li>Limit the font families to keep the design cohesive</li>
+	<li>Use relative units rem and em so the text responds to the users prefernces or force your vision on the users</li>
+	<li>Rem scales root size while em scales from the parent</li>
+	<li>Already talked about font weight but <code>font-style: italic</code>  makes it just read it</li>
+	<li>Use line-height to change the vertical gap and letter-spacing to change the spacing between</li>
+	<li>Use text-align for the horizontal alignment transform for upper and lowercase and decoration for underlines custom color and thickness</li>
+	<li>Use clamp and media queries to adjust font size based on the screen size</li>
+	<li>Normalize defaults by setting the base on the base elements body h1-6 p and a</li>
+	<li>Ensure contrast rations meet WCAG AA <code>dont care no</code> dont lock absolute sizes and respect browser zoom and use semeantic tags for meaning</li>
+      </ul>
+    </section>
+    <section class="card red-card shadow">
+      <h2>Colors & Backgrounds</h2>
+      <ul>
+	<li>Color makes your page not look like trash</li>
+	<li>Set color values hex rgb or hsv</li>
+	<li>Define your colors as variables like <code>--primary-red</code> the main red color for the site #ff2627</li>
+	<li>Background- color and image are are self-explanitory the other stuff doesnt really matter you just steal that stuff from apple <code>remember kids its not theft if its just some css rules anyone can write</code></li>
+	<li>Use linear radial or conic gradients to make smooth color transition like my background from #ff2627 to #000 in dark or #fff in light modes</li>
+	<li>Use the gradients to layer colors over a image and use <code>background-size: cover;</code> to make it cover it and <code>background-position: center;</code> to center it</li>
+	<li>Use data URIs or CSS gradients fro subtle patterns without extra assets like my card shadows or the trasparancy on the section cards</li>
+	<li>Blah blah blah contrash accessibility</li>
+      </ul>
+    </section> 
   </main>
   <footer class="blurred-gradient">
     <p>No copyright at all! <code>(for this page)</code></p>

@@ -1,10 +1,12 @@
 /* Basic table formatting */
 .table {
   width: 100%;
-  border-collapse: collapse;
   font-family: Arial, sans-serif;
   font-size: 14px;
-  border-radius:24px;
+  border-radius: 24px;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
 }
 
 .table th, .table td {

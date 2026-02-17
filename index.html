@@ -23,9 +23,10 @@
     <ul> 
       <li><a href="index.html" class="active btn">Home</a></li>
       <li><a href="images.html" class="btn btn-clear">Images</a></li>
-      <li><button id="theme-toggle" class="theme-toggle">🌙 Dark Mode</button></li>
+      <li><a href="final.html" class="btn btn-clear">Doing It</a></li>
     </ul>
   </nav>
+  <button id="theme-toggle" class="theme-toggle">🌙 Dark Mode</button>
   <header class="blurred-gradient">
     <h1>Idk what to put here</h1>
     <p>The Epstein files are being released to distract us from isreal and this page is notes on the W3 HTML & CSS thing</p>
@@ -281,6 +282,66 @@
 	<li>Use the gradients to layer colors over a image and use <code>background-size: cover;</code> to make it cover it and <code>background-position: center;</code> to center it</li>
 	<li>Use data URIs or CSS gradients fro subtle patterns without extra assets like my card shadows or the trasparancy on the section cards</li>
 	<li>Blah blah blah contrash accessibility</li>
+      </ul>
+    </section>
+    <section class="card red-card shadow">
+      <h2>Box Model</h2>
+      <ul>
+	<li>Every element is a rectagle</li>
+	<li>Content is whats inside padding is the space between content and border while border is obvious and margin is the space between the border and othe elements</li>
+	<li>By default width and height rules only apply to content but with <code>box-sizing: border-box;</code> it will include padding and border</li>
+	<li>Inspect element shows the diagram</li>
+	<li>Vertical margins between blocks collapse to the largest value</li>
+	<li>A parent and its first/last children can share margins unless padding/borders intervene</li>
+	<li>Use padding to prevent unexpected colapses</li>
+	<li>Use shorthand like <code>margin: 24px 16px;</code> for 24px vertical and 16px horizontal</li>
+	<li>Create as scale and stick to it using custom properties for consistant margins and padding</li> 
+      </ul>
+    </section>
+    <section class="card red-card shadow">
+      <h2>Layout Fundamentals</h2>
+      <ul>
+	<li>Blocks stack flow inlines sit in a line and only respect horizontal and inline block flow inline and allow width/height control</li>
+	<li>Switch the flow behavior with <code>display: value;</code></li>
+	<li>Block makes inline content a full-width block while inline-block makes a box that flows like text <code>my favorite type of display</code></li>
+	<li>Use <code>float: direction;</code> to take elements out of normal flow</li>
+	<li>Use <code>overflow: auto;</code> to clear the float</li>
+	<li>Modern layouts should use flexbox or grid more but floats are still in old code</li>
+	<li>Elements render in DOM order unless positioning or z-index is applied</li>
+	<li>New stacking contexts form with properties like position + z-index opacity transform or filter</li>
+	<li>Manage stacking contexts to avoid unexpected overlays</li>
+      </ul>
+    </section>
+    <section class="card red-card shadow">
+      <h2>Positioning & Z-index</h2>
+      <ul>
+	<li>Lets you break out of normal flow when you need overlays tooltips sticky headers or UI chrome</li>
+	<li>Positioning has the modes static does nothing relative stays in flow but offsets absolute is out of flow and positioned relative to nearest ancestor with positioning fixed pinned to viewport and ignore scrolling sticky behaves relative until a scroll threshold where it becomes fixed</li>
+	<li>Combine position with offsets to place the elements</li>
+	<li>Sticky headers are often for UI chrome and navigation</li>
+	<li>Only possitioned elements and flex/grid children respect z-index</li>
+	<li>New stacking contexts form when you use position with z-index things like opacity < 1 transform or filter</li>
+	<li>Z-index is like depth</li>
+	<li>Use relative + absolute positioning for badges or icons</li>
+	<li>Keep fixed elements minimal to avoid clutter</li>
+	<li>Use sticky for table headers or inpage navs that follow scrolling</li>
+	<li>Audit stacking context when overlays misbehave inspect element highlights them</li>
+      </ul>
+    </section>
+    <section class="card red-card shadow">
+      <h2>Flexbox Layout</h2>
+      <ul>
+	<li>Flexbox is good for arranging in one dimension either rows or columns while distributing space and aligning the items</li>
+	<li>Flexbox gives simple alignment adaptive spacing and is component friendly</li>
+	<li>Enable flexbox with <code>display: flex;</code> for rows or <code>inline-flex</code> use <code>flex-direction</code> to swap to columns</li>
+	<li>Flexbox in inherited by child elements</li>
+	<li>Main axis follows <code>flex-direction</code> control distrobution with <code>justifty-content</code></li>
+	<li>Cross axis is peroendicular and aligns items with <code>align-items</code> or per item with <code>align-self</code></li>
+	<li>Use <code>gap</code> for consistent spacing without extra margins</li>
+	<li><code>flex: grow shrink and basis;</code> define how items consume space</li>
+	<li><code>flex-basis</code> sets ideal size before distrobution of free space</li>
+	<li>Combine flex shortcuts like <code>flex: 1;</code> for equal widths or <code>flex: 0 0 300px;</code> for a fixed width</li>
+        <li>NOT DONE YET</li>
       </ul>
     </section> 
   </main>

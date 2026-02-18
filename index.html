@@ -341,9 +341,33 @@
 	<li><code>flex: grow shrink and basis;</code> define how items consume space</li>
 	<li><code>flex-basis</code> sets ideal size before distrobution of free space</li>
 	<li>Combine flex shortcuts like <code>flex: 1;</code> for equal widths or <code>flex: 0 0 300px;</code> for a fixed width</li>
-        <li>NOT DONE YET</li>
+        <li>The 3 numbers are for grow shrink and base size</li>
+	<li><code>flex-wrap: wrap;</code> breks items into new rows/colums</li>
+	<li><code>order</code> reorderes items visualy without changing the DOM</li>
       </ul>
     </section> 
+    <section class="card red-card shadow">
+      <h2>Grid Layout</h2>
+      <ul>
+	<li>The grid is a 2d layout that defines rows columns and regions useful for dashboards landing pages and complex responsive structure needing minimal markup</li>
+	<li>Enable the grid with <code>display: grid;</code> or <code>display: inline-grid;</code></li>
+	<li>Use <code>grid-template-columns</code> and <code>grid-template-rows</code> to declare tracks</li>
+	<li><code>gap</code> or <code>column-gap/row-gap</code> handle track spacing</li>
+	<li>For fixed tracks use something like <code>grid-template-columns: 300px 1fr 1fr;</code></li>
+	<li>Use fr for one of the numbers to distribute remaining space</li>
+	<li>To make responsive tracks use <code>repeat(auto-fit, minmax(220px, 1fr))</code> minmax sets the min and max size</li>
+	<li>Auto-placement fills tracks in source order automatically</li>
+	<li>Explicit placement <code>grid-column: 1/7;</code></li>
+	<li>Use named areas <code>grid-template-areas</code> and <code>grid-area</code> on items</li>
+	<li>Use <code>justify-items</code> and <code>align-items</code> to align content inside tracks</li>
+	<li>Use <code>justify-content</code> and <code>align-content</code> to distribute overall grid within the container</li>
+	<li><code>place-items</code> and <code>place-content</code> combine bothe axes</li>
+	<li>Use <code>auto-fit/auto-fill</code> with minmax() for fluid cards</li>
+	<li>Combine media queries with track adjustemnts for complex breakpoints</li>
+	<li>Switch to stacked layout by changing <code>grid-template-areas</code> on small screens</li>
+	<li>Fit collapses empty tracks while fill keeps them but both adapt to screen size</li>
+      </ul>
+    </section>
   </main>
   <footer class="blurred-gradient">
     <p>No copyright at all! <code>(for this page)</code></p>

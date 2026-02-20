@@ -32,9 +32,9 @@
   content: '';
   position: absolute;
   inset: -10px;
-  border-radius: 12px;
+  border-radius: 6px;
   background: linear-gradient(360deg, var(--shadow-from) 0%, var(--shadow-to) 100%);
-  filter: blur(20px);
+  filter: blur(10px);
   opacity: .75;
   z-index: -1;
 }

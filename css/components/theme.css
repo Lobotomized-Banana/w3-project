@@ -6,20 +6,20 @@
   
   /* Light theme colors */
   --bg-primary: #f4f7fb;
-  --bg-secondary: #fff;
+  --bg-secondary: #c0c0c0;
   --bg-tertiary: #e8ecf1;
   --text-primary: #253238;
   --text-secondary: #000;
   --text-inverse: #fff;
   --border-color: #000;
   --card-bg: rgba(255, 255, 255, 0.95);
-  --shadow-from: #000;
+  --shadow-from: #c0c0c0;
   --shadow-to: #ff2627;
-
+  --theme-angle: 7deg;
   /* Gradient colors for unified background */
   --gradient-start: #ff2627;
-  --gradient-mid: #fff;
-  --gradient-end: #f4f7fb;
+  --gradient-mid: #dce3ed;
+  --gradient-end: #c8d1dd 255, 255, 0.95);
 
   --toggle-bg: rgba(42, 42, 42, 0.95);
   --toggle-text: #e8e8e8;
@@ -40,6 +40,7 @@
   --card-bg: rgba(42, 42, 42, 0.95);
   --shadow-from: #ff2627;
   --shadow-to: #000;
+  --theme-angle: 360deg;
 
   /* Gradient colors for unified background */
   --gradient-start: #ff2627;

@@ -9,8 +9,7 @@
 }
 
 .blurred-gradient {
-    position: relative;
-    /* Your content styles here */
+  position: relative;
 }
 
 .blurred-gradient::before {

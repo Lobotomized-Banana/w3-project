@@ -1,8 +1,5 @@
 /* Theme Toggle Button */
 .theme-toggle {
-  position: fixed;
-  top: 20px;
-  right: 20px;
   padding: 10px 20px;
   background: var(--toggle-bg);
   color: var(--toggle-text);
@@ -13,9 +10,9 @@
   font-size: 14px;
   font-weight: 600;
   transition: all 0.3s ease;
-  z-index: 1000;
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 12px rgba(255, 38, 39, 0.2);
+  margin-left: auto;
 }
 
 .theme-toggle:hover {

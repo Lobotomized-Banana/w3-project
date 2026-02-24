@@ -29,7 +29,7 @@
   </nav>
   <header class="blurred-gradient">
     <h1>HTML & CSS Reference</h1>
-    <p>Notes on W3 HTML & CSS — elements, attributes, layout, and best practices for building websites.</p>
+    <p>W3 is a spirtually israeli company and I think they love Benjamin Netanyahu</p>
   </header>
   <main>
     <section class="card red-card shadow">
@@ -339,13 +339,151 @@
     </section>
     <section class="card red-card shadow">
       <h2>Layout Patterns</h2>
+      <p>Combine Flexbox, Grid, and modern CSS features to build reusable page layouts — hero sections, split panels, dashboards, and marketing pages — without resorting to brittle floats.</p>
+
+      <h3>General Principles</h3>
       <ul>
         <li>Use flexbox and grid as your primary layout tools. Avoid floats for new layouts — they exist in legacy code but are not the right tool for modern page structure.</li>
-        <li>Media + text pair: use a two-column grid (<code>grid-template-columns: 1fr 1fr;</code>) that collapses to a single column on small screens with a media query. The media element (image/video) occupies one column and text the other.</li>
-        <li>App shell pattern: a fixed outer grid or flexbox defines the sidebar, header, and main content area. The header and sidebar stay constant across page navigation; only the main area content changes. Use <code>grid-template-areas</code> to name the regions and reassign them in media queries for mobile.</li>
-        <li>Card grid: use <code>display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));</code> for a responsive card layout that automatically adjusts column count without media queries.</li>
         <li>Centering: <code>display: grid; place-items: center;</code> or <code>display: flex; justify-content: center; align-items: center;</code> on a container are the cleanest ways to center a child both horizontally and vertically.</li>
       </ul>
+
+      <h3>Hero with Split Emphasis</h3>
+      <p>Pair messaging with media using a two-column grid that collapses on smaller screens. "Collapsing" means the columns stack vertically when the screen is narrow.</p>
+      <ul>
+        <li>Use <code>grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));</code> so the two columns stack automatically on small screens — no media query needed.</li>
+        <li>Use <code>clamp()</code> for fluid padding and font sizes that scale with viewport width without breakpoints: e.g. <code>font-size: clamp(2.5rem, 6vw, 3.75rem);</code>.</li>
+        <li>Apply <code>align-items: center;</code> on the grid container to vertically align the text column and media column.</li>
+      </ul>
+      <pre><code>.hero {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 32px;
+  align-items: center;
+  padding: clamp(40px, 8vw, 120px) clamp(24px, 6vw, 80px);
+  background: radial-gradient(circle at top left, #2563eb, #0f172a);
+  color: #fff;
+}
+.hero h1 { font-size: clamp(2.5rem, 6vw, 3.75rem); margin-bottom: 16px; }
+.hero figure {
+  background: rgba(255,255,255,0.08);
+  border-radius: 28px;
+  padding: clamp(24px, 4vw, 48px);
+}</code></pre>
+
+      <h3>Split Panel / App Shell</h3>
+      <p>Use Grid to balance a fixed sidebar against a scrollable content area. An "application shell" is the basic frame of the app — sidebar, header, and main area — without page-specific data.</p>
+      <ul>
+        <li>Define two columns with <code>grid-template-columns: 280px 1fr;</code> on the outer container and set <code>min-height: 100vh;</code> so it fills the viewport.</li>
+        <li>At a mobile breakpoint, collapse to <code>grid-template-columns: 1fr;</code> and make the nav <code>position: sticky; top: 0;</code> so it stays visible while the user scrolls the main content.</li>
+        <li>Use <code>grid-template-areas</code> to name the regions and reassign them in media queries for mobile layouts.</li>
+      </ul>
+      <pre><code>.layout-shell {
+  display: grid;
+  min-height: 100vh;
+  grid-template-columns: 280px 1fr;
+}
+.layout-shell nav  { background: #0f172a; color: #fff; padding: 32px; }
+.layout-shell main { padding: 48px clamp(32px, 6vw, 96px); background: #f8fafc; }
+
+@media (max-width: 960px) {
+  .layout-shell { grid-template-columns: 1fr; }
+  .layout-shell nav { position: sticky; top: 0; }
+}</code></pre>
+
+      <h3>Dashboard / Responsive Card Grid</h3>
+      <p>Create responsive card grids that adapt gracefully from desktop to mobile without any media queries.</p>
+      <ul>
+        <li>Use <code>grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));</code> — <code>auto-fit</code> collapses empty tracks so existing items stretch to fill, while <code>minmax()</code> sets the minimum card width.</li>
+        <li>Use <code>auto-fill</code> instead of <code>auto-fit</code> if you want empty placeholder tracks to remain (useful for keeping a consistent column count).</li>
+        <li>For highlighted "featured" cards, use <code>grid-template-areas</code> or <code>grid-column: span 2;</code> to make specific cards span multiple columns.</li>
+        <li>Combine <code>clamp()</code> for adaptive padding and typography so card content scales with the viewport.</li>
+      </ul>
+
+      <h3>Marketing Content Blocks (Alternating Text &amp; Image)</h3>
+      <p>Alternate text and imagery using a reusable flip class or <code>:nth-child</code> selectors to create visual rhythm without repeating code.</p>
+      <ul>
+        <li>Wrap each section in a two-column grid: <code>grid-template-columns: 1fr 1fr;</code>.</li>
+        <li>Flip the column order on alternate rows via the <code>order</code> property (Flexbox) or by redefining <code>grid-template-areas</code> on a <code>.flip</code> class.</li>
+        <li>Stack vertically under a mobile breakpoint by collapsing to <code>grid-template-columns: 1fr;</code> and removing the order override.</li>
+      </ul>
+
+      <h3>Footer Patterns</h3>
+      <p>Combine CSS Grid for multi-column link groups and Flexbox for legal copy alignment.</p>
+      <ul>
+        <li>Use <code>grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));</code> for link clusters so columns adapt to the available width automatically.</li>
+        <li>Place social icons in a Flexbox row: <code>display: flex; gap: 16px; align-items: center;</code>.</li>
+        <li>Separate the main link grid from the bottom legal/copyright bar with a border or extra margin, and use <code>justify-content: space-between;</code> on the legal row to push copyright text left and policy links right.</li>
+        <li>Always ensure sufficient colour contrast on footer text and add visible focus outlines for keyboard accessibility.</li>
+      </ul>
+    </section>
+    <section class="card red-card shadow">
+      <h2>Responsive Design</h2>
+      <p>Responsive design ensures every layout looks and works great on any device. Combine flexible grid systems, fluid typography, and media queries to adapt content gracefully.</p>
+
+      <h3>Viewport Basics</h3>
+      <ul>
+        <li>Always include the viewport meta tag: <code>&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;</code>. Without it, mobile browsers render at a desktop width and scale everything down, breaking your layout.</li>
+        <li>Design mobile-first — write your base styles for narrow screens, then layer on media queries to enhance for tablets and desktops. This approach keeps CSS leaner and forces you to prioritise essential content.</li>
+        <li>Use relative units (<code>rem</code>, <code>vw</code>, <code>%</code>) rather than <code>px</code> wherever possible so elements scale naturally with the viewport and user font-size preferences.</li>
+      </ul>
+
+      <h3>Fluid Grids</h3>
+      <ul>
+        <li>Use Flexbox and Grid with fractional units (<code>fr</code>) to create layouts that flow and resize rather than overflow. Fractional units divide up leftover space evenly between tracks.</li>
+        <li>Apply <code>max-width</code> to text containers (e.g. <code>max-width: 65ch;</code>) to prevent line lengths from becoming unreadably wide on large screens.</li>
+        <li>Use <code>repeat(auto-fit, minmax(min, 1fr))</code> on grid containers for automatic, breakpoint-free column counts — columns form when there's room and collapse to one when there isn't.</li>
+      </ul>
+
+      <h3>Responsive Typography</h3>
+      <ul>
+        <li>Use <code>clamp(min, preferred, max)</code> for font sizes: e.g. <code>font-size: clamp(1rem, 2vw, 1.5rem);</code>. The browser picks a value between the minimum and maximum, keeping text readable at every viewport width.</li>
+        <li>Scale headings, line heights, and spacing together so the vertical rhythm holds at all sizes. If the heading grows, the surrounding white space should grow proportionally.</li>
+        <li>Consider defining fluid spacing tokens with CSS custom properties — e.g. <code>--space-md: clamp(1rem, 3vw, 2rem);</code> — so you can update spacing site-wide from one place.</li>
+      </ul>
+
+      <h3>Media Queries</h3>
+      <ul>
+        <li>A breakpoint is the screen width at which your layout needs to change. Choose breakpoints based on where the design breaks, not around specific device sizes, since device sizes change constantly.</li>
+        <li>Write mobile-first: base styles apply to all screens; <code>@media (min-width: ...)</code> queries progressively enhance for larger viewports. This is typically more maintainable than overriding desktop styles downward.</li>
+        <li>Common starting points: <code>min-width: 480px</code> (large phones), <code>min-width: 768px</code> (tablets), <code>min-width: 1200px</code> (wide desktops) — but always adjust to suit your content.</li>
+      </ul>
+      <pre><code>:root {
+  --space: clamp(1rem, 2vw, 1.5rem);
+}
+.page {
+  display: grid;
+  gap: var(--space);
+}
+@media (min-width: 768px) {
+  .page { grid-template-columns: 240px 1fr; }
+}
+@media (min-width: 1200px) {
+  .page { grid-template-columns: 280px 2fr 1fr; }
+}</code></pre>
+
+      <h3>Container Queries</h3>
+      <ul>
+        <li>Standard media queries react to the viewport width; container queries (<code>@container</code>) react to the width of a parent element. This makes components truly self-contained and reusable in different layout contexts.</li>
+        <li>Opt a parent into container query tracking with <code>container-type: inline-size;</code>. Then use <code>@container (min-width: 400px) { ... }</code> inside child selectors.</li>
+        <li>Browser support is now good (all modern browsers), but still provide sensible default styles as a fallback for older environments.</li>
+      </ul>
+
+      <h3>Responsive Media</h3>
+      <ul>
+        <li>Make all images fluid by default: <code>img { max-width: 100%; height: auto; }</code>. This prevents images from overflowing their containers while maintaining their aspect ratio.</li>
+        <li>Use the <code>&lt;picture&gt;</code> element with <code>&lt;source media="..."&gt;</code> attributes to serve different image files at different breakpoints — useful for art direction (e.g. a cropped portrait on mobile, a wide landscape on desktop).</li>
+        <li>For embedded videos and iframes, preserve aspect ratio with <code>aspect-ratio: 16 / 9;</code> combined with <code>width: 100%;</code>, or use the older padding-percentage hack for broader support.</li>
+        <li>Use <code>object-fit: cover;</code> on <code>&lt;img&gt;</code> elements inside fixed-size containers to crop cleanly without distorting the image.</li>
+      </ul>
+
+      <h3>Testing Strategy</h3>
+      <ul>
+        <li>Use browser DevTools device mode to quickly preview common breakpoints and simulate touch events. Resize the viewport manually to catch edge cases between presets.</li>
+        <li>Test on real devices when possible — DevTools emulation doesn't fully replicate touch target size, font rendering, or scrolling behaviour on actual hardware.</li>
+        <li>Check landscape and portrait orientations, and test with the browser's minimum and maximum font-size settings to ensure your fluid type still holds.</li>
+        <li>Audit performance: responsive sites should serve appropriately sized images and avoid loading desktop-weight resources on mobile. Use the Network tab in DevTools to check payload sizes.</li>
+      </ul>
+    </section>
   </main>
   <footer class="blurred-gradient">
     <p>No copyright at all! <code>(for this page)</code></p>

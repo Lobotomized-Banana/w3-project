@@ -25,13 +25,36 @@
       <li><a href="images.html" class="btn btn-clear">Images</a></li>
       <li><a href="final.html" class="btn btn-clear">Doing It</a></li>
     </ul>
-    <button id="theme-toggle" class="theme-toggle">🌙 Dark Mode</button>
+    <div class="settings-menu" role="navigation" aria-label="Display settings">
+      <button id="settings-trigger" class="settings-trigger" aria-haspopup="true" aria-expanded="false">⚙️ Display <span class="chevron">▼</span></button>
+    <div class="settings-panel" role="menu">
+    <div class="settings-row">
+      <label class="settings-label" for="switch-theme">
+        <span class="row-icon">🌙</span> Dark Mode
+      </label>
+      <label class="toggle-switch">
+        <input type="checkbox" id="switch-theme" role="menuitemcheckbox">
+        <span class="toggle-track"></span>
+      </label>
+    </div>
+    <hr class="settings-divider">
+    <div class="settings-row">
+      <label class="settings-label" for="switch-transparent">
+        <span class="row-icon">💧</span> Transparent
+      </label>
+      <label class="toggle-switch">
+        <input type="checkbox" id="switch-transparent" role="menuitemcheckbox">
+        <span class="toggle-track"></span>
+      </label>
+    </div>
+  </div>
+</div>
   </nav>
-  <header class="blurred-gradient">
+  <header>
     <h1>HTML & CSS Reference</h1>
     <p>W3 is a spirtually israeli company and I think they love Benjamin Netanyahu</p>
   </header>
-  <main>
+  <main class="blurred-gradient">
     <section class="card red-card shadow">
       <h2>Head Metadata</h2>
       <ul class="list-nosty">
@@ -483,11 +506,549 @@
         <li>Check landscape and portrait orientations, and test with the browser's minimum and maximum font-size settings to ensure your fluid type still holds.</li>
         <li>Audit performance: responsive sites should serve appropriately sized images and avoid loading desktop-weight resources on mobile. Use the Network tab in DevTools to check payload sizes.</li>
       </ul>
+
+      <h3>Responsive Navigation</h3>
+      <p>On desktop, navigation links sit in a horizontal Flexbox row. On mobile, they collapse into a vertical drawer — the slide-out panel typically revealed by a hamburger button — hidden until toggled.</p>
+      <ul>
+        <li>Use Flexbox (<code>display: flex; gap: 20px;</code>) for the desktop menu and switch to <code>flex-direction: column;</code> inside a <code>@media (max-width: 768px)</code> block for mobile.</li>
+        <li>Hide the collapsed menu with <code>opacity: 0; pointer-events: none;</code> and reveal it by toggling a <code>data-open="true"</code> attribute. Avoid using <code>display: none</code> if you want CSS transitions to animate the reveal — transitions can't animate from <code>display: none</code>.</li>
+        <li>Use <code>backdrop-filter: blur()</code> on the mobile drawer for a frosted-glass effect without a heavy opaque background.</li>
+        <li>Always set <code>aria-expanded</code> on the toggle button and update it with JavaScript so screen readers know the menu state. Keyboard and screen reader support must be maintained even when the nav is visually hidden.</li>
+      </ul>
+      <pre><code>.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px clamp(16px, 6vw, 48px);
+  background: #0f172a;
+  color: #fff;
+}
+.nav-links { display: flex; gap: 20px; list-style: none; margin: 0; padding: 0; }
+.nav-toggle { display: none; border: 0; background: transparent; color: inherit; font-size: 1.5rem; }
+
+@media (max-width: 768px) {
+  .nav-links {
+    position: absolute;
+    inset: 72px 16px auto 16px;
+    flex-direction: column;
+    padding: 24px;
+    border-radius: 16px;
+    background: rgba(15, 23, 42, 0.92);
+    backdrop-filter: blur(10px);
+    transform-origin: top right;
+    transform: scale(0.9);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .nav-links[data-open="true"] {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1);
+  }
+  .nav-toggle { display: inline-flex; }
+}</code></pre>
+
+      <h3>Responsive Cards</h3>
+      <p>Cards should stack in a single column on narrow screens and form a multi-column grid on wider ones, without needing explicit breakpoints for every step.</p>
+      <ul>
+        <li>Use <code>grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));</code> for fluid card grids — columns form automatically when there is enough room and collapse to one when there isn't.</li>
+        <li>Keep a consistent content hierarchy inside every card: image → heading → supporting text → call-to-action button. Changing this order between cards creates visual noise and makes scanning harder.</li>
+        <li>Give cards a fixed <code>min-height</code> or use <code>display: flex; flex-direction: column;</code> with <code>margin-top: auto;</code> on the CTA button so all cards in a row share the same height and their buttons line up.</li>
+        <li>Prefer <code>aspect-ratio</code> on card images rather than fixed pixel heights, so images scale correctly at every card width without cropping or distorting unexpectedly.</li>
+      </ul>
+
+      <h3>Data Tables</h3>
+      <p>Wide tables overflow on small screens. Rather than forcing horizontal scrolling, consider restructuring the data for mobile.</p>
+      <ul>
+        <li>The simplest approach is <code>overflow-x: auto;</code> on a wrapper element — this contains the overflow and lets the user scroll the table horizontally without the rest of the page scrolling.</li>
+        <li>For a richer experience, use <code>display: block;</code> on <code>tr</code>, <code>td</code>, and <code>th</code> at narrow widths to transform rows into stacked card-like blocks. Use <code>data-label</code> attributes and CSS <code>::before</code> pseudo-elements to re-inject column headings next to each value.</li>
+        <li>Hide non-essential columns at narrow widths with <code>display: none;</code> inside a media query. Prioritise the columns a mobile user actually needs.</li>
+        <li>Whatever layout you choose, always preserve the semantic <code>&lt;table&gt;</code>, <code>&lt;thead&gt;</code>, and <code>&lt;th scope="..."&gt;</code> structure so screen readers can still announce the relationship between each cell and its header.</li>
+      </ul>
+
+      <h3>Responsive Forms</h3>
+      <p>Forms need to be easy to complete on both a desktop keyboard and a phone touchscreen.</p>
+      <ul>
+        <li>On desktop, arrange label-and-input pairs in a two-column grid (<code>grid-template-columns: auto 1fr;</code>) so labels and fields align neatly. On mobile, collapse to a single column with <code>grid-template-columns: 1fr;</code> so labels sit above their inputs.</li>
+        <li>Always link every <code>&lt;label&gt;</code> to its input via matching <code>for</code> and <code>id</code> attributes. Never rely solely on placeholder text as a label — placeholders disappear as soon as the user starts typing.</li>
+        <li>Set <code>width: 100%;</code> on inputs and buttons at narrow viewports so they become easy tap targets that fill the available width.</li>
+        <li>Use the correct <code>type</code> attribute on inputs (<code>type="email"</code>, <code>type="tel"</code>, <code>type="number"</code>) so mobile browsers display the appropriate keyboard automatically.</li>
+      </ul>
+
+      <h3>Micro-interactions &amp; Touch Considerations</h3>
+      <p>Small animations and state changes make interfaces feel responsive to input — but they must work across pointer, keyboard, and touch.</p>
+      <ul>
+        <li>Never style only <code>:hover</code>. Always pair it with <code>:focus-visible</code> so keyboard users get the same visual feedback. On touch devices, <code>:hover</code> can be sticky or entirely absent.</li>
+        <li>Wrap animations in <code>@media (prefers-reduced-motion: no-preference) { ... }</code> so they only run for users who haven't requested reduced motion at the OS level. Users with vestibular disorders can experience nausea from excessive motion.</li>
+        <li>All interactive elements — buttons, links, form controls — should have a minimum tap target size of 44×44 px as recommended by WCAG. Use <code>min-height</code> and <code>padding</code> rather than setting a fixed <code>height</code>, so the element can still grow with its content.</li>
+        <li>Use CSS <code>transition</code> on <code>transform</code> and <code>opacity</code> for animations rather than animating <code>width</code>, <code>height</code>, or <code>margin</code> — transform and opacity changes are handled by the compositor thread and don't cause layout recalculations, so they stay smooth even on low-powered devices.</li>
+      </ul>
+    </section>
+    <section class="card red-card shadow">
+      <h2>Responsive Components</h2>
+      <p>Turn design patterns into resilient components that adapt to any viewport. Combine fluid units, Flexbox/Grid, and interaction states to deliver accessible, responsive UI building blocks.</p>
+
+      <h3>Responsive Navigation</h3>
+      <p>On desktop, a horizontal Flexbox nav bar works well. On mobile, it needs to collapse into a vertical drawer hidden behind a toggle button. The key is to handle this shift without breaking keyboard navigation or screen reader support.</p>
+      <ul>
+        <li>Use Flexbox with <code>gap</code> for the desktop horizontal menu. At a mobile breakpoint, switch the list to <code>flex-direction: column;</code> and position it absolutely below the navbar.</li>
+        <li>Hide the mobile menu with <code>opacity: 0; pointer-events: none;</code> rather than <code>display: none;</code> so you can animate it in with a CSS transition. Toggle a <code>data-open="true"</code> attribute via JavaScript to trigger the open state.</li>
+        <li>Always set <code>aria-expanded</code> on the toggle button and update it with JavaScript to reflect the open/closed state — screen readers rely on this attribute to convey menu visibility.</li>
+        <li>Show the hamburger button only on mobile with <code>display: none</code> on desktop and <code>display: inline-flex</code> inside the media query.</li>
+        <li>Use <code>backdrop-filter: blur()</code> on the mobile drawer for a frosted-glass effect, but provide a solid fallback background colour for browsers that don't support it.</li>
+      </ul>
+      <pre><code>.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px clamp(16px, 6vw, 48px);
+  background: #0f172a;
+  color: #fff;
+}
+.nav-links { display: flex; gap: 20px; list-style: none; margin: 0; padding: 0; }
+.nav-toggle { display: none; border: 0; background: transparent; color: inherit; font-size: 1.5rem; }
+
+@media (max-width: 768px) {
+  .nav-links {
+    position: absolute;
+    inset: 72px 16px auto 16px;
+    flex-direction: column;
+    padding: 24px;
+    border-radius: 16px;
+    background: rgba(15, 23, 42, 0.92);
+    backdrop-filter: blur(10px);
+    transform-origin: top right;
+    transform: scale(0.9);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .nav-links[data-open="true"] { opacity: 1; pointer-events: auto; transform: scale(1); }
+  .nav-toggle { display: inline-flex; }
+}</code></pre>
+
+      <h3>Responsive Cards</h3>
+      <p>Cards should stack vertically on mobile and flow into a multi-column grid on larger screens. Keep the internal content hierarchy consistent across breakpoints so the layout feels predictable.</p>
+      <ul>
+        <li>Use <code>display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));</code> on the card container for a breakpoint-free fluid grid — cards form extra columns automatically as space allows.</li>
+        <li>Maintain a consistent internal structure within each card: image → heading → supporting text → call-to-action button. Reordering these at different breakpoints creates cognitive friction for users.</li>
+        <li>Give card images a fixed aspect ratio using <code>aspect-ratio: 16 / 9;</code> combined with <code>object-fit: cover;</code> so they crop cleanly regardless of the source image dimensions.</li>
+        <li>Use <code>clamp()</code> for card padding so it scales proportionally with viewport width without separate breakpoints: e.g. <code>padding: clamp(16px, 4vw, 32px);</code>.</li>
+      </ul>
+
+      <h3>Responsive Data Tables</h3>
+      <p>Wide tables overflow on mobile. The two most common fixes are hiding non-essential columns at narrow widths, or reflowing each row into a card-style block layout.</p>
+      <ul>
+        <li>To reflow a table into cards, set <code>display: block;</code> on <code>thead</code>, <code>tbody</code>, <code>tr</code>, and <code>td</code> inside a media query. Then use <code>data-label</code> attributes on each <code>td</code> and surface them with CSS <code>content: attr(data-label);</code> so users still see column headings.</li>
+        <li>To simply hide columns, add a utility class like <code>.col-optional</code> and apply <code>display: none;</code> at the mobile breakpoint. Ensure the hidden data isn't critical — if it is, consider an accordion row that expands to show additional details instead.</li>
+        <li>Always preserve table semantics (<code>&lt;table&gt;</code>, <code>&lt;th scope="col"&gt;</code>, <code>&lt;td&gt;</code>) even when using CSS to reflow the display. Screen readers rely on the underlying markup, not the visual presentation.</li>
+        <li>Make sure keyboard navigation through the table works at every viewport width — users should be able to tab through cells and activate any interactive controls inside them.</li>
+      </ul>
+
+      <h3>Responsive Forms</h3>
+      <p>Forms that use multi-column layouts on desktop should collapse to a single column on mobile. Every label must remain programmatically connected to its input regardless of layout changes.</p>
+      <ul>
+        <li>Use CSS Grid for form layouts: e.g. <code>grid-template-columns: 1fr 1fr;</code> for a two-column desktop form that collapses to <code>1fr</code> on mobile. Never use tables for form layout.</li>
+        <li>Always pair <code>&lt;label for="id"&gt;</code> with a matching <code>id</code> on the input. Avoid placeholder-only labels — placeholders disappear when the user starts typing and fail accessibility requirements for persistent labelling.</li>
+        <li>Set <code>width: 100%;</code> on inputs and buttons at narrow viewports. Full-width touch targets are much easier to hit on a phone than compact inline inputs.</li>
+        <li>Add <code>type</code> attributes that trigger the right mobile keyboard: <code>type="email"</code> shows the @ keyboard, <code>type="tel"</code> shows the numeric dial pad, <code>type="number"</code> shows digits. This simple step significantly improves mobile usability.</li>
+      </ul>
+
+      <h3>Micro-interactions &amp; Touch Considerations</h3>
+      <p>Hover states don't exist on touch screens. Any interaction that depends solely on <code>:hover</code> must have a focus or active equivalent, and motion effects must respect user accessibility preferences.</p>
+      <ul>
+        <li>Write interaction styles using <code>:hover, :focus-visible</code> together so keyboard and pointer users both get visual feedback. Never apply <code>outline: none;</code> without providing a custom focus indicator.</li>
+        <li>Wrap motion in <code>@media (prefers-reduced-motion: no-preference) { ... }</code> so transitions and animations are only active when the user hasn't requested reduced motion at the OS level. Provide instantaneous fallbacks for users who have.</li>
+        <li>Ensure all interactive targets — buttons, links, form controls — are at least 44×44px in hit area. Use padding rather than increasing font size to reach this minimum without affecting visual design.</li>
+        <li>Avoid relying on long-press or complex gestures as the sole way to access a feature; always provid
+    </section> 
+    <section class="card red-card shadow">
+      <h2>CSS Custom Properties (Variables)</h2>
+      <ul class="list-nosty">
+        <li>CSS custom properties — commonly called variables — are defined with a <code>--</code> prefix and read back with the <code>var()</code> function. They are case-sensitive: <code>--Color-Brand</code> and <code>--color-brand</code> are distinct properties.</li>
+        <li>Declare global tokens on <code>:root</code>, which targets the <code>&lt;html&gt;</code> element and gives them the highest possible scope. Any element in the document can then inherit and consume them via <code>var(--token-name)</code>.</li>
+        <li>Custom properties are part of the cascade and inherit just like <code>color</code> or <code>font-size</code>. Redefining a variable on a container element — e.g. <code>.card { --surface: #1e293b; }</code> — scopes the new value to that element and all of its descendants, leaving the global definition untouched.</li>
+        <li>Provide a fallback value as the second argument to <code>var()</code>: <code>var(--space-md, 1rem)</code>. The fallback is used whenever the referenced variable has not been defined in the current scope, acting as a safe default rather than causing an invalid value.</li>
+        <li>Variables work seamlessly inside <code>calc()</code>, <code>clamp()</code>, and other CSS functions: <code>padding: calc(var(--space-md) * 1.5);</code> or <code>font-size: clamp(var(--text-min), 3vw, var(--text-max));</code>. The variable is substituted first, then the function evaluates.</li>
+        <li>Switch themes at runtime by toggling a <code>data-theme</code> attribute on <code>&lt;html&gt;</code> and redefining the same token names under that selector. Because all components reference the same variable names, every colour, spacing value, and shadow updates automatically with a single attribute change — no JavaScript needs to touch individual elements.</li>
+        <li>The <code>@media (prefers-color-scheme: dark)</code> query can redefine custom properties directly, giving users an automatic dark theme that respects their OS preference without any JavaScript at all.</li>
+        <li>JavaScript can read a variable with <code>getComputedStyle(el).getPropertyValue('--token-name').trim()</code> and write one with <code>el.style.setProperty('--token-name', value)</code>. Writing to <code>document.documentElement</code> updates the global scope; writing to a specific element scopes the change to that element only.</li>
+        <li>Use <code>@supports (--custom: property)</code> to detect custom property support before applying variable-dependent rules. All modern browsers support custom properties; this guard is only necessary when targeting very old browsers such as IE 11, which has no support at all.</li>
+      </ul>
+      <pre><code>/* 1. Define global design tokens on :root */
+:root {
+  --color-brand:    #2563eb;
+  --color-surface:  #ffffff;
+  --color-text:     #0f172a;
+  --space-md:       clamp(1rem, 2vw, 1.5rem);
+  --radius-card:    12px;
+*}
+
+/* 2. Dark theme — same names, different values */
+:root[data-theme="dark"] {
+  --color-surface: #0f172a;
+  --color-text:    #e2e8f0;
+}
+
+/* 3. Consume tokens anywhere */
+body {
+  background: var(--color-surface);
+  color:      var(--color-text);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.card {
+  padding:       var(--space-md);
+  border-radius: var(--radius-card);
+  background:    var(--color-surface);
+}
+
+.btn-primary {
+  background: var(--color-brand);
+  color: #fff;
+  padding: calc(var(--space-md) * 0.5) var(--space-md);
+}
+
+/* 4. Scope a token override to a single component */
+.card--dark {
+  --color-surface: #1e293b; /* only affects this card and its children */
+}</code></pre>
+    </section>
+   <section class="card red-card shadow">
+      <h2>CSS Functions &amp; Calculations</h2>
+      <p>CSS functions let you compute values, blend colors, and respond to context without extra JavaScript. Combine them with custom properties to build smart, responsive design systems.</p>
+
+      <h3>Math Helpers</h3>
+      <ul class="list-nosty">
+        <li><code>calc()</code> — performs arithmetic across mixed units directly in CSS. Example: <code>width: calc(100% - 2rem);</code> subtracts a fixed rem value from a fluid percentage — something that is impossible with a plain static value. Spaces around the operator are required by the spec.</li>
+        <li><code>min()</code> / <code>max()</code> — pick the smallest or largest value from a comma-separated list. Example: <code>width: min(600px, 100%);</code> keeps an element at most 600px wide but never overflows its container. Multiple values and mixed units are supported.</li>
+        <li><code>clamp(min, preferred, max)</code> — constrains a value to a responsive range. The middle (preferred) value is typically a viewport unit so it scales fluidly; the first and third arguments act as hard floor and ceiling. Example: <code>font-size: clamp(1rem, 2.5vw, 1.5rem);</code> scales with the viewport but never smaller than 1rem or larger than 1.5rem.</li>
+      </ul>
+      <pre><code>/* Fluid spacing scale using clamp() — scales between breakpoints
+   without any media queries. Custom properties make the scale
+   reusable across the entire project. */
+:root {
+  --space-xs: clamp(0.5rem,  1vw,   0.75rem);
+  --space-sm: clamp(0.75rem, 1.5vw, 1.125rem);
+  --space-lg: clamp(1.5rem,  3vw,   2.5rem);
+}
+
+.card {
+  padding:       var(--space-lg);
+  margin-block:  var(--space-sm);
+  /* calc() uses the custom property as an operand */
+  border-radius: calc(var(--space-xs) * 2);
+}
+
+/* width can never exceed 800px, but is otherwise fluid */
+.content-area {
+  width: min(800px, 100% - var(--space-lg) * 2);
+}</code></pre>
+
+      <h3>Color Functions</h3>
+      <ul class="list-nosty">
+        <li><code>rgb()</code> and <code>hsl()</code> accept decimal values and an optional alpha channel (0 = fully transparent, 1 = fully opaque). Modern syntax omits the slash: <code>rgb(99 102 241 / 0.5)</code>. Prefer <code>hsl()</code> when you need predictable lightness adjustments — the third argument maps directly to perceived brightness.</li>
+        <li><code>color-mix(in srgb, colorA 40%, colorB)</code> blends two colors at a defined ratio in a given color space. This removes the need for hardcoded intermediate swatches and makes theme variations easier to maintain — change one source color and every blend updates automatically.</li>
+        <li><code>color-contrast()</code> is still experimental — it returns whichever of a supplied list provides the best contrast ratio against a base color. Where supported, it can automate accessible text-on-background decisions.</li>
+      </ul>
+      <pre><code>:root {
+  --brand: hsl(231 89% 63%);          /* indigo */
+  --brand-muted: color-mix(in srgb, var(--brand) 40%, white);
+}
+
+/* Semi-transparent overlay using modern rgb() syntax */
+.overlay {
+  background: rgb(0 0 0 / 0.45);
+}
+
+/* Automatic light/dark text based on background */
+.badge {
+  background: var(--brand);
+  color: color-contrast(var(--brand) vs white, black);
+}</code></pre>
+
+      <h3>Trigonometry &amp; Geometry</h3>
+      <ul class="list-nosty">
+        <li>Modern browsers support <code>sin()</code>, <code>cos()</code>, <code>tan()</code>, <code>asin()</code>, <code>acos()</code>, <code>atan()</code>, <code>atan2()</code>, and <code>hypot()</code> natively in CSS. Arguments are in radians by default; use <code>deg</code> units for degrees.</li>
+        <li>These are most useful for polar-coordinate animations, radial menu positioning, or wave-shaped decorative elements — all achievable without JavaScript or SVG hacks.</li>
+        <li>Pair with CSS custom properties and <code>@property</code> to animate the angle value, producing smooth orbital or carousel motion driven entirely by CSS transitions.</li>
+      </ul>
+      <pre><code>/* Position items in a circle using sin/cos.
+   --angle is incremented per item with calc(). */
+.orbit-item {
+  --angle: 45deg;
+  --radius: 120px;
+  position: absolute;
+  top:  calc(50% + var(--radius) * sin(var(--angle)));
+  left: calc(50% + var(--radius) * cos(var(--angle)));
+}</code></pre>
+
+      <h3>Environment &amp; Context Helpers</h3>
+      <ul class="list-nosty">
+        <li><code>env(safe-area-inset-bottom)</code> (and top/left/right) exposes the safe-area insets that mobile browsers report for notches and home bars. Always add these to <code>padding</code> on fixed footers and sticky headers when targeting mobile web apps.</li>
+        <li><code>var(--name, fallback)</code> retrieves a custom property value; the optional second argument is used whenever the variable is undefined in the current scope. This makes <code>var()</code> a context helper as much as a variable lookup — components can declare their own local fallbacks and stay self-contained.</li>
+        <li><code>attr(data-label)</code> reads an HTML attribute inside a CSS <code>content</code> declaration. It is commonly used to surface <code>data-label</code> values on <code>td</code> elements when a data table is reflowed into a card layout at narrow viewports.</li>
+      </ul>
+      <pre><code>/* Fixed footer that clears the iOS home-bar safe area */
+.site-footer {
+  position: sticky;
+  bottom: 0;
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+}
+
+/* Responsive table: surface column header as a pseudo-label */
+@media (max-width: 600px) {
+  td::before {
+    content: attr(data-label) ": ";
+    font-weight: 700;
+  }
+}</code></pre>
+    </section>
+<section class="card red-card shadow">
+      <h2>CSS Transitions</h2>
+      <p>CSS transitions animate changes to CSS properties, creating smooth hover states, focus styles, and UI feedback without JavaScript. They activate automatically whenever a targeted property changes value — no scripting required.</p>
+
+      <h3>Core Properties</h3>
+      <ul class="list-nosty">
+        <li><code>transition-property</code> — names the CSS property (or properties) to animate, e.g. <code>background-color</code>, <code>transform</code>, <code>opacity</code>. Use <code>all</code> to target every animatable property at once, but avoid it in production: it causes the browser to watch every property for changes, which is wasteful and can produce unintended animations on properties you never meant to transition.</li>
+        <li><code>transition-duration</code> — total running time of the animation, written as a time value (<code>200ms</code>, <code>0.3s</code>). There is no default — a missing or zero duration means the change is instant.</li>
+        <li><code>transition-timing-function</code> — the easing curve that controls acceleration through the animation. Common keywords are <code>ease</code> (default — slow start, fast middle, slow end), <code>linear</code>, <code>ease-in</code> (starts slow), <code>ease-out</code> (ends slow), and <code>ease-in-out</code>. Custom curves use <code>cubic-bezier()</code>.</li>
+        <li><code>transition-delay</code> — how long the browser waits before starting the animation after the property change is detected. Useful for staggering a sequence of elements.</li>
+        <li><code>transition</code> shorthand — sets all four in one declaration in the order <code>property duration timing-function delay</code>. Example: <code>transition: background 180ms ease, transform 180ms ease;</code>. Multiple transitions are comma-separated, each targeting a different property.</li>
+      </ul>
+      <pre><code>/* Shorthand: property | duration | timing-function | delay
+   Two properties transitioned independently in one rule. */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: #2563eb;
+  color: #fff;
+  text-decoration: none;
+  /* background and transform each get their own curve */
+  transition: background 180ms ease, transform 180ms ease;
+}
+
+/* :focus-visible ensures keyboard users see the same feedback
+   as pointer users — never style :hover alone */
+.cta:hover,
+.cta:focus-visible {
+  background: #1d4ed8;   /* darker blue */
+  transform: translateY(-2px); /* subtle lift */
+}</code></pre>
+
+      <h3>Timing Functions</h3>
+      <ul class="list-nosty">
+        <li><code>ease</code> — the default; accelerates quickly then decelerates. Works well for most UI interactions because it feels natural to the human eye.</li>
+        <li><code>linear</code> — constant speed throughout. Best for looping animations (spinners, progress bars) where you want no perceived acceleration.</li>
+        <li><code>ease-in</code> — starts slow, ends fast. Use sparingly for elements leaving the screen (exits), where the acceleration feels intentional.</li>
+        <li><code>ease-out</code> — starts fast, ends slow. Ideal for elements entering the screen (entrances) — the deceleration implies the element has arrived and settled.</li>
+        <li><code>ease-in-out</code> — slow at both ends, fast in the middle. Good for longer transitions where you want a smooth, polished feel throughout.</li>
+        <li><code>cubic-bezier(x1, y1, x2, y2)</code> — define any custom curve using two control points. Tools like cubic-bezier.com let you preview curves visually before committing them to code. Values can exceed 0–1 on the Y axis to create overshoot (bounce) effects.</li>
+        <li><code>steps(n, direction)</code> — divides the transition into <code>n</code> equal discrete jumps instead of a smooth curve. Use it for sprite-sheet animations, typewriter effects, or any scenario where intermediate states should not be visible.</li>
+      </ul>
+      <pre><code>/* Custom spring-like overshoot using cubic-bezier.
+   Y values above 1.0 cause the element to "bounce" past
+   the target before settling — impossible with keyword easings. */
+.spring {
+  transition: transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.spring:hover {
+  transform: scale(1.08);
+}
+
+/* steps() — jumps between frames, no interpolation.
+   Perfect for a typewriter cursor blink. */
+.cursor {
+  animation: blink 1s steps(1, end) infinite;
+}
+@keyframes blink {
+  50% { opacity: 0; }
+}</code></pre>
+
+      <h3>Responsive Motion &amp; Accessibility</h3>
+      <p>Hover states and motion effects do not exist on touch screens or for users who have requested reduced motion at the operating system level. Any interaction that relies solely on <code>:hover</code> or on animation must have a respectful fallback.</p>
+      <ul class="list-nosty">
+        <li>Wrap all non-essential motion inside <code>@media (prefers-reduced-motion: no-preference) { ... }</code> so transitions only run when the user has <em>not</em> requested reduced motion. The inverse query <code>(prefers-reduced-motion: reduce)</code> can be used to explicitly supply a stripped-down fallback with no movement. This is an operating-system accessibility setting; honoring it prevents discomfort or harm for users with vestibular disorders.</li>
+        <li>Keep interactive feedback durations between 150ms and 300ms. Shorter feels snappy and responsive; beyond 300ms starts to feel sluggish. Reserve longer durations (400–600ms) only for complex transitions like page-level layout changes.</li>
+        <li>Avoid large <code>transform</code> distances or significant layout-shifting transitions — a button that moves 80px on hover is jarring; 2–4px is the practical sweet spot for a lift effect.</li>
+        <li>Always pair <code>:hover</code> styles with <code>:focus-visible</code> so keyboard users receive identical visual feedback. <code>:focus-visible</code> (rather than <code>:focus</code>) shows the indicator only when navigating by keyboard, avoiding the focus ring on mouse clicks.</li>
+        <li>Do not transition <code>width</code>, <code>height</code>, <code>top</code>, or <code>left</code> — these trigger full layout recalculations on every frame. Prefer <code>transform: scale()</code> and <code>transform: translate()</code>, which are composited by the GPU and do not affect document flow.</li>
+      </ul>
+      <pre><code>/* Safe default: no motion at all */
+.btn {
+  background: #2563eb;
+  color: #fff;
+}
+.btn:hover,
+.btn:focus-visible {
+  background: #1d4ed8;
+}
+
+/* Motion layer: only applied when the user has NOT
+   requested reduced motion at the OS level */
+@media (prefers-reduced-motion: no-preference) {
+  .btn {
+    transition: background 180ms ease, transform 180ms ease;
+  }
+  .btn:hover,
+  .btn:focus-visible {
+    transform: translateY(-2px);
+  }
+}
+
+/* GPU-friendly: use transform instead of top/left/width/height */
+.panel {
+  /* BAD  — triggers layout: width: 200px → width: 400px  */
+  /* GOOD — composited, no reflow:                         */
+  transform: scaleX(0.5);
+  transform-origin: left center;
+  transition: transform 250ms ease-out;
+}
+.panel.open {
+  transform: scaleX(1);
+}</code></pre>
+    </section>
+      <h3>2D Transforms</h3>
+      <ul class="list-nosty">
+        <li><code>translate(x, y)</code> — moves an element along the X and/or Y axis without disturbing surrounding elements. Positive X moves right; positive Y moves down. Single-axis shorthand: <code>translateX()</code> / <code>translateY()</code>. Accepts any CSS length unit or percentage; percentages are relative to the element's own dimensions, making <code>translate(-50%, -50%)</code> a reliable centring technique.</li>
+        <li><code>scale(x, y)</code> — resizes an element around its transform origin. A value of <code>1</code> is unchanged, <code>2</code> doubles the size, <code>0.5</code> halves it. If only one argument is given, both axes scale equally. Use <code>scaleX()</code> or <code>scaleY()</code> to stretch or compress on a single axis.</li>
+        <li><code>rotate(angle)</code> — spins the element clockwise for positive values, counter-clockwise for negative. Accepts <code>deg</code>, <code>rad</code>, <code>grad</code>, or <code>turn</code> units. Example: <code>rotate(0.25turn)</code> and <code>rotate(90deg)</code> are equivalent.</li>
+        <li><code>skew(x-angle, y-angle)</code> — slants the element along each axis. Use sparingly — skew distorts text and can reduce readability. Single-axis shorthand: <code>skewX()</code> / <code>skewY()</code>.</li>
+        <li>Multiple transforms can be chained in a single <code>transform</code> declaration, separated by spaces: <code>transform: translateY(-4px) scale(1.02) rotate(2deg);</code>. The browser applies them right-to-left, so order matters — <code>rotate</code> then <code>translate</code> produces a different result than <code>translate</code> then <code>rotate</code>.</li>
+      </ul>
+      <pre><code>/* Chain multiple 2D transforms — order is right-to-left.
+   This scales first, then lifts the already-scaled element. */
+.card:hover,
+.card:focus-visible {
+  transform: translateY(-6px) scale(1.02);
+  transition: transform 220ms ease;
+}
+
+/* Percentage translate: centres absolutely-positioned elements
+   regardless of their dimensions */
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* pulls back by half own width/height */
+}</code></pre>
+
+      <h3>3D Transforms</h3>
+      <ul class="list-nosty">
+        <li><code>perspective(value)</code> — applied directly on the <code>transform</code> property of the element being transformed (inline perspective). Smaller values produce a more dramatic depth effect; larger values flatten it. Example: <code>transform: perspective(700px) rotateY(20deg);</code>. Alternatively, set <code>perspective: 800px;</code> on the <em>parent</em> container so all child elements share the same vanishing point, which creates a more cohesive scene.</li>
+        <li><code>rotateX(angle)</code> / <code>rotateY(angle)</code> / <code>rotateZ(angle)</code> — rotate around each 3D axis. <code>rotateX</code> tips the top toward or away from the viewer; <code>rotateY</code> swings left and right; <code>rotateZ</code> is equivalent to the 2D <code>rotate()</code>.</li>
+        <li><code>translateZ(value)</code> — moves the element toward or away from the viewer along the Z axis. Positive values bring it closer; negative values push it back. Requires perspective to be visible.</li>
+        <li><code>transform-style: preserve-3d;</code> — set on a parent to ensure its children are positioned in 3D space rather than flattened into the parent's plane. Without it, nested 3D transforms have no effect on descendants.</li>
+        <li><code>backface-visibility: hidden;</code> — hides the reverse face of an element when it is rotated more than 90°. Essential for card-flip effects to prevent the back face showing through while the front is visible.</li>
+      </ul>
+      <pre><code>/* 3D card tilt on hover — perspective set inline so each card
+   has its own vanishing point */
+.grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  padding: clamp(24px, 6vw, 80px);
+}
+
+.card {
+  padding: 32px;
+  border-radius: 24px;
+  background: linear-gradient(145deg, #1e293b, #0f172a);
+  color: #fff;
+  /* baseline: flat, no tilt */
+  transform: perspective(700px) rotateX(0deg) rotateY(0deg);
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+
+.card:hover,
+.card:focus-visible {
+  transform: perspective(700px) rotateX(6deg) rotateY(-6deg) translateY(-6px);
+  box-shadow: 0 24px 40px rgb(15 23 42 / 0.35);
+}
+
+/* Card-flip pattern — requires preserve-3d on the container */
+.flip-container {
+  perspective: 1000px;
+}
+.flip-card {
+  transform-style: preserve-3d;
+  transition: transform 500ms ease;
+}
+.flip-card.flipped {
+  transform: rotateY(180deg);
+}
+.flip-card .front,
+.flip-card .back {
+  backface-visibility: hidden;
+  position: absolute;
+  inset: 0;
+}
+.flip-card .back {
+  transform: rotateY(180deg);
+}</code></pre>
+
+      <h3>Transform Origin</h3>
+      <ul class="list-nosty">
+        <li>By default, every transform is applied relative to the element's centre (<code>50% 50%</code>). <code>transform-origin</code> shifts that anchor point, changing how rotation, scaling, and skewing behave.</li>
+        <li>Accepts keyword pairs (<code>top left</code>, <code>bottom right</code>), length values (<code>0 0</code>), or percentages (<code>100% 0%</code>). A third value sets the Z-axis origin for 3D transforms.</li>
+        <li>Common patterns: <code>transform-origin: top center;</code> for a dropdown unfolding from its trigger; <code>transform-origin: left center;</code> for a sliding drawer that grows rightward from its attachment point; <code>transform-origin: bottom center;</code> for a tooltip that scales up from its pointer.</li>
+      </ul>
+      <pre><code>/* Dropdown menu expands downward from the trigger edge,
+   not from its own centre */
+.dropdown {
+  transform-origin: top center;
+  transform: scaleY(0);
+  transition: transform 200ms ease-out;
+}
+.dropdown.open {
+  transform: scaleY(1);
+}
+
+/* Tooltip scales from its tail point at the bottom */
+.tooltip {
+  transform-origin: bottom center;
+  transform: scale(0);
+  transition: transform 150ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.tooltip.visible {
+  transform: scale(1);
+}</code></pre>
+
+      <h3>Performance Tips</h3>
+      <ul class="list-nosty">
+        <li>Transforms are GPU-accelerated — the browser hands them to the compositor thread and animates them without triggering layout or paint recalculations. This makes <code>transform: translate()</code> dramatically cheaper than changing <code>top</code>, <code>left</code>, <code>margin</code>, or <code>width</code>.</li>
+        <li><code>will-change: transform;</code> is a hint to the browser that this element is about to be transformed, allowing it to promote the element to its own compositor layer in advance. Use it sparingly and only when you have measured a real performance problem — overusing it consumes GPU memory and can actually slow pages down.</li>
+        <li>Animating <code>opacity</code> alongside <code>transform</code> is safe; both are composited properties. Avoid animating <code>filter</code>, <code>clip-path</code>, or <code>border-radius</code> simultaneously with transforms on low-powered devices — these may fall back to software rendering.</li>
+        <li>Always provide a <code>@media (prefers-reduced-motion: reduce)</code> fallback that removes or simplifies large transform movements. A 180° flip or a 100px translateY that is dramatic on desktop can cause discomfort for users with vestibular disorders.</li>
+      </ul>
+      <pre><code>/* Default: instant state change, no motion */
+.panel {
+  transform: translateX(-100%);
+}
+.panel.open {
+  transform: translateX(0);
+}
+
+/* Motion enhancement — only added when the user hasn't
+   requested reduced motion at the OS level */
+@media (prefers-reduced-motion: no-preference) {
+  .panel {
+    transition: transform 300ms ease-out;
+    /* hint to compositor — only add if you've measured a
+       real jank problem; remove after profiling */
+    will-change: transform;
+  }
+}</code></pre>
     </section>
   </main>
   <footer class="blurred-gradient">
     <p>No copyright at all! <code>(for this page)</code></p>
     <p>Shout out to Claude Sonnet 4.5 Extended for splitting up the css into components for me</p>
+    <p>Shout out to Claude Sonnet 4.6 for re-writing everything to make it have good info.
     <a href="https://github.com/Lobotomized-Banana/w3-project" target="_blank" rel="noreferrer" class="btn btn-red">stored on github</a>
   </footer>
 </body>

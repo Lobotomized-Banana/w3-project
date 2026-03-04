@@ -19,7 +19,7 @@
   /* Gradient colors for unified background */
   --gradient-start: #ff2627;
   --gradient-mid: #dce3ed;
-  --gradient-end: #c8d1dd;
+  --gradient-end: #c8d1dd 255, 255, 0.95);
 
   --toggle-bg: rgba(42, 42, 42, 0.95);
   --toggle-text: #e8e8e8;
@@ -83,7 +83,7 @@
 }
 
 [data-transparent="true"]:root,
-[data-transparent="true"]:root {
+[data-transparent="true"] :root {
   --gradient-start: rgba(255, 38, 39, 0.15);
   --gradient-mid:   rgba(220, 227, 237, 0.08);
   --gradient-end:   rgba(200, 209, 221, 0.05);

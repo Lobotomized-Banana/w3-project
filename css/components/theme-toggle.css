@@ -1,5 +1,25 @@
-/* Theme Toggle Button */
-.theme-toggle {
+/* Settings Dropdown + Toggle Switches
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Structure:
+ *   .settings-menu            relative wrapper
+ *     .settings-trigger       the nav button
+ *     .settings-panel         the dropdown
+ *       .settings-row         one row per option
+ *         .settings-label     icon + text
+ *         .toggle-switch      pill switch
+ * State: .settings-menu[data-open] shows the panel
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+/* Wrapper */
+.settings-menu {
+  position: relative;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+/* Trigger — inherits the same visual vars as the old .theme-toggle button */
+.settings-trigger {
   padding: 10px 20px;
   background: var(--toggle-bg);
   color: var(--toggle-text);
@@ -12,17 +32,142 @@
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 12px rgba(255, 38, 39, 0.2);
-  margin-left: auto;
+  white-space: nowrap;
+  user-select: none;
 }
-
-.theme-toggle:hover {
+.settings-trigger:hover {
   background: var(--toggle-bg-hover);
   border-color: var(--toggle-border-hover);
   color: #fff;
   transform: scale(1.05);
   box-shadow: 0 6px 16px rgba(255, 38, 39, 0.4);
 }
+.settings-trigger:active { transform: scale(0.95); }
 
-.theme-toggle:active {
-  transform: scale(0.95);
+/* Chevron rotates when open */
+.settings-trigger .chevron {
+  display: inline-block;
+  margin-left: 6px;
+  font-size: 10px;
+  transition: transform 0.25s ease;
+  vertical-align: middle;
+}
+.settings-menu[data-open] .settings-trigger .chevron {
+  transform: rotate(180deg);
+}
+
+/* Dropdown panel
+ * visibility + opacity + translateY — the standard MDN pattern for CSS-
+ * animated show/hide. display:none cannot be transitioned; this approach
+ * keeps the element out of pointer interaction when hidden (pointer-events:none)
+ * while allowing a smooth fade+slide transition. */
+.settings-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 220px;
+  background: var(--toggle-bg, rgba(30, 30, 30, 0.85));
+  border: 2px solid var(--toggle-border, rgba(255, 38, 39, 0.4));
+  border-radius: 16px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.35), 0 2px 8px rgba(255,38,39,0.15);
+  padding: 12px 8px;
+  z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  pointer-events: none;
+}
+.settings-menu[data-open] .settings-panel {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Rows */
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  transition: background 0.15s ease;
+}
+.settings-row:hover { background: rgba(255, 38, 39, 0.08); }
+
+.settings-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: "SN Pro";
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--toggle-text, #fff);
+  cursor: pointer;
+  user-select: none;
+}
+.settings-label .row-icon { font-size: 16px; line-height: 1; }
+
+.settings-divider {
+  height: 1px;
+  background: var(--toggle-border, rgba(255, 38, 39, 0.2));
+  margin: 4px 14px;
+  border: none;
+}
+
+/* Toggle switch — label wraps a hidden <input> + visible <span.toggle-track>
+ * The input stays in the accessibility tree: keyboard users press Space to
+ * toggle, screen readers announce checked/unchecked state automatically.
+ * :checked pseudo-class + adjacent sibling combinator (~) drives all visuals.
+ * Source: MDN "Styling form controls", WCAG 2.1 technique C15. */
+.toggle-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.toggle-switch input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.toggle-track {
+  width: 44px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid var(--toggle-border, rgba(255, 38, 39, 0.4));
+  border-radius: 12px;
+  transition: background 0.25s ease, border-color 0.25s ease;
+  position: relative;
+}
+.toggle-track::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background: var(--toggle-text, #fff);
+  border-radius: 50%;
+  transition: transform 0.25s ease;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+.toggle-switch input[type="checkbox"]:checked ~ .toggle-track {
+  background: rgba(255, 38, 39, 0.75);
+  border-color: rgba(255, 38, 39, 0.9);
+}
+.toggle-switch input[type="checkbox"]:checked ~ .toggle-track::after {
+  transform: translateX(20px);
+}
+/* Focus ring on the visible track when keyboard-navigating */
+.toggle-switch input[type="checkbox"]:focus-visible ~ .toggle-track {
+  outline: 2px solid rgba(255, 38, 39, 0.8);
+  outline-offset: 2px;
 }

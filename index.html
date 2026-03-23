@@ -912,6 +912,7 @@ body {
   transform: scaleX(1);
 }</code></pre>
     </section>
+    <section class="card red-card shadow">
       <h3>2D Transforms</h3>
       <ul class="list-nosty">
         <li><code>translate(x, y)</code> — moves an element along the X and/or Y axis without disturbing surrounding elements. Positive X moves right; positive Y moves down. Single-axis shorthand: <code>translateX()</code> / <code>translateY()</code>. Accepts any CSS length unit or percentage; percentages are relative to the element's own dimensions, making <code>translate(-50%, -50%)</code> a reliable centring technique.</li>
@@ -936,7 +937,8 @@ body {
   left: 50%;
   transform: translate(-50%, -50%); /* pulls back by half own width/height */
 }</code></pre>
-
+</section>
+    <section class="card red-card shadow">
       <h3>3D Transforms</h3>
       <ul class="list-nosty">
         <li><code>perspective(value)</code> — applied directly on the <code>transform</code> property of the element being transformed (inline perspective). Smaller values produce a more dramatic depth effect; larger values flatten it. Example: <code>transform: perspective(700px) rotateY(20deg);</code>. Alternatively, set <code>perspective: 800px;</code> on the <em>parent</em> container so all child elements share the same vanishing point, which creates a more cohesive scene.</li>
@@ -1043,6 +1045,907 @@ body {
     will-change: transform;
   }
 }</code></pre>
+    </section>
+    <section class="card red-card shadow">
+      <h2>CSS Animations</h2>
+      <p>CSS animations use <code>@keyframes</code> rules to define intermediate states along a timeline, then apply them to elements via <code>animation-*</code> properties. Unlike transitions, animations run automatically — no state change is required to trigger them.</p>
+
+      <h3>@keyframes</h3>
+      <ul class="list-nosty">
+        <li><code>@keyframes name { … }</code> — the at-rule that defines the animation sequence. The name you give it is what you reference via <code>animation-name</code>. Inside the rule, keyframe selectors mark points in the timeline where specific CSS values should be applied.</li>
+        <li>Use the keyword <code>from</code> for the start state (equivalent to <code>0%</code>) and <code>to</code> for the end state (equivalent to <code>100%</code>). Percentages let you add intermediate steps — e.g. <code>50%</code> or <code>0%, 100%</code> as a comma-separated selector list to apply the same styles at multiple points.</li>
+        <li>If you omit <code>from</code> (<code>0%</code>) or <code>to</code> (<code>100%</code>), the browser uses the element's current computed style as the missing start or end state. This is useful for animating <em>from</em> an element's natural position without repeating those values inside the keyframe.</li>
+        <li>Properties marked <code>!important</code> inside a keyframe are ignored — per the MDN specification, <code>!important</code> declarations in <code>@keyframes</code> rules have no effect and the property falls back to its cascaded value.</li>
+        <li>If multiple <code>@keyframes</code> rules share the same name, the last one parsed by the browser wins. Rules do not cascade or merge — only one keyframe set is ever used for a given name.</li>
+      </ul>
+      <pre><code>/* Named keyframe sequence — referenced by animation-name */
+@keyframes slide-in {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Multi-stop sequence using percentages */
+@keyframes pulse {
+  0%   { transform: scale(1);    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); }
+  70%  { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(37, 99, 235, 0); }
+  100% { transform: scale(1);    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+}</code></pre>
+
+      <h3>Animation Properties</h3>
+      <ul class="list-nosty">
+        <li><code>animation-name</code> — references the <code>@keyframes</code> rule to apply. Multiple names can be comma-separated to run several animations simultaneously on the same element. Use <code>none</code> to disable an animation without removing other animation declarations in the cascade.</li>
+        <li><code>animation-duration</code> — the total time for one full cycle, in seconds (<code>s</code>) or milliseconds (<code>ms</code>). There is no default — if this is missing or set to <code>0s</code> the animation fires instantly. The unit is required even for zero: <code>0s</code> not <code>0</code>.</li>
+        <li><code>animation-timing-function</code> — the easing curve applied within each keyframe interval, not across the whole animation. Accepts the same keywords as <code>transition-timing-function</code>: <code>ease</code> (default), <code>linear</code>, <code>ease-in</code>, <code>ease-out</code>, <code>ease-in-out</code>, <code>cubic-bezier()</code>, and <code>steps()</code>.</li>
+        <li><code>animation-delay</code> — how long to wait before the first iteration begins. A negative value is valid and causes the animation to start mid-cycle — useful for staggering items in a list so they feel offset without actually delaying each one.</li>
+        <li><code>animation-iteration-count</code> — how many times the animation repeats. Use a positive number or the keyword <code>infinite</code> for a looping animation. Fractional values (e.g. <code>0.5</code>) run a partial cycle before stopping.</li>
+        <li><code>animation-direction</code> — controls the playback direction each iteration: <code>normal</code> (always forward, default), <code>reverse</code> (always backward), <code>alternate</code> (forward then backward, reversing each cycle — useful for looping animations that need to return to their start), <code>alternate-reverse</code> (backward then forward).</li>
+        <li><code>animation-fill-mode</code> — what styles apply outside the active animation window. <code>none</code> (default) applies nothing before or after; <code>forwards</code> keeps the final keyframe's styles after the animation ends; <code>backwards</code> applies the first keyframe's styles during the delay period; <code>both</code> applies both behaviours simultaneously.</li>
+        <li><code>animation-play-state</code> — <code>running</code> (default) or <code>paused</code>. Toggle this with JavaScript or a <code>:hover</code> rule to pause and resume an animation mid-cycle without losing its current position.</li>
+        <li><code>animation</code> shorthand — sets all sub-properties in order: <code>duration | easing | delay | iteration-count | direction | fill-mode | play-state | name</code>. Multiple animations are comma-separated. When both <code>animation-duration</code> and <code>animation-delay</code> are time values in the shorthand, the first time value is always <code>duration</code> and the second is <code>delay</code>.</li>
+      </ul>
+      <pre><code>/* Shorthand: duration | easing | delay | iteration | direction | fill-mode | name */
+.badge {
+  animation: 2s ease-in-out 0s infinite alternate both pulse;
+}
+
+/* The same written out longhand */
+.badge {
+  animation-name:            pulse;
+  animation-duration:        2s;
+  animation-timing-function: ease-in-out;
+  animation-delay:           0s;
+  animation-iteration-count: infinite;
+  animation-direction:       alternate;
+  animation-fill-mode:       both;
+  animation-play-state:      running;
+}
+
+/* Pause on hover via play-state — animation resumes from
+   the same position when the cursor leaves */
+.badge:hover {
+  animation-play-state: paused;
+}
+
+/* Stagger three items using a negative delay — each starts
+   mid-cycle so they feel offset without actually waiting */
+.item:nth-child(1) { animation: 1.2s ease infinite slide-in; }
+.item:nth-child(2) { animation: 1.2s ease -0.4s infinite slide-in; }
+.item:nth-child(3) { animation: 1.2s ease -0.8s infinite slide-in; }</code></pre>
+
+      <h3>animation-fill-mode in Depth</h3>
+      <ul class="list-nosty">
+        <li><code>forwards</code> is the most commonly needed value — without it, a one-shot animation (e.g. a card sliding in on page load) snaps back to its original position as soon as it finishes. <code>forwards</code> locks the element at the final keyframe.</li>
+        <li><code>backwards</code> is only noticeable when there is an <code>animation-delay</code>. Without it the element shows its base CSS styles during the delay; with <code>backwards</code>, it immediately assumes the first keyframe's styles, which prevents a visual jump when the animation finally starts.</li>
+        <li>For entrance animations — fade in, slide in — the combination <code>animation-fill-mode: both; animation-iteration-count: 1;</code> is the most reliable pattern. The element starts at the first keyframe and ends locked at the last, regardless of what the base CSS says.</li>
+      </ul>
+
+      <h3>Accessibility &amp; Performance</h3>
+      <ul class="list-nosty">
+        <li>Always wrap non-essential motion inside <code>@media (prefers-reduced-motion: no-preference) { … }</code>. This is the same requirement covered in the Transitions section — CSS animations are subject to the same rule. Users who have enabled the reduced-motion setting at the OS level (often for vestibular disorders) should receive instant state changes, not animated ones.</li>
+        <li>Animate only <code>transform</code> and <code>opacity</code> for smooth, GPU-composited animations. Animating <code>width</code>, <code>height</code>, <code>top</code>, <code>left</code>, <code>margin</code>, or <code>padding</code> triggers layout recalculation on every frame, which is expensive and causes jank on lower-powered devices.</li>
+        <li><code>will-change: transform;</code> can pre-promote an element to its own GPU layer before the animation begins, reducing the initial frame drop. Use it sparingly — only when profiling confirms a performance problem — because each promoted layer consumes GPU memory. Remove it after the animation completes if possible.</li>
+        <li>Prefer <code>animation-iteration-count: infinite</code> over JavaScript-driven loop timers for looping effects. Infinite CSS animations are entirely off the main thread once running, while JS <code>setInterval</code> competes with other tasks and can stutter.</li>
+      </ul>
+      <pre><code>/* Safe base: no animation at all. The element is already in its
+   final position — no FOUC, no layout shift. */
+.hero-text {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Motion layer: only applied when the user has NOT
+   requested reduced motion at the OS level */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-text {
+    opacity: 0;
+    animation: fade-up 600ms ease-out forwards;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* GPU-friendly looping spinner — transform and opacity only */
+.spinner {
+  animation: spin 800ms linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}</code></pre>
+    </section>
+    <section class="card red-card shadow">
+      <h2>CSS Effects &amp; Filters</h2>
+      <p>CSS visual effects let you add depth, atmosphere, and image manipulation entirely in the browser — no JavaScript, no image editing software. This covers shadows, opacity, filter functions, backdrop filters, and blend modes.</p>
+
+      <h3>box-shadow</h3>
+      <ul class="list-nosty">
+        <li><code>box-shadow</code> applies one or more drop shadows to an element's box. The value syntax is: <code>offset-x offset-y blur-radius spread-radius color</code>. The blur and spread radii are optional — omitting both produces a sharp, solid shadow.</li>
+        <li><code>offset-x</code> and <code>offset-y</code> control horizontal and vertical displacement. Negative <code>offset-x</code> places the shadow to the left; negative <code>offset-y</code> places it above the element. Setting both to <code>0</code> centers the shadow behind the element, useful for a pure glow effect when combined with blur.</li>
+        <li><code>blur-radius</code> — the larger the value, the bigger and softer the shadow. Negative values are not allowed. A value of <code>0</code> produces a sharp edge.</li>
+        <li><code>spread-radius</code> — positive values expand the shadow beyond the element's dimensions; negative values shrink it. This is useful for creating an inner-glow effect at small negative values.</li>
+        <li>Add the <code>inset</code> keyword before the offsets to flip the shadow from an outer drop-shadow to an inner one — the shadow appears inside the element's border, above the background but below the content. Per MDN, inset shadows are drawn inside the border even if the border is transparent.</li>
+        <li>Multiple shadows are comma-separated and rendered front-to-back (first in the list renders on top). This is how layered, multi-colour glow effects are built.</li>
+        <li>Unlike <code>filter: drop-shadow()</code>, <code>box-shadow</code> always follows the element's rectangular bounding box — it does not trace the actual shape of partially transparent content. Use <code>filter: drop-shadow()</code> instead if you need the shadow to follow irregular shapes like PNG cut-outs or SVGs.</li>
+      </ul>
+      <pre><code>/* offset-x | offset-y | blur | spread | color */
+.card {
+  box-shadow: 0 4px 12px 0 rgb(0 0 0 / 0.15);
+}
+
+/* inset keyword — shadow appears inside the box */
+.inset-well {
+  box-shadow: inset 0 2px 6px rgb(0 0 0 / 0.3);
+}
+
+/* Multiple shadows — first renders on top.
+   Outer ambient shadow + tighter directional shadow layered. */
+.elevated {
+  box-shadow:
+    0 1px 2px  rgb(0 0 0 / 0.10),
+    0 8px 24px rgb(0 0 0 / 0.18);
+}
+
+/* Glow effect — both offsets at 0, spread expands the blur */
+.glow {
+  box-shadow: 0 0 0 4px rgb(37 99 235 / 0.4),
+              0 0 24px 0 rgb(37 99 235 / 0.3);
+}
+
+/* Animating box-shadow is expensive (triggers paint).
+   Prefer animating opacity on a ::after pseudo-element instead. */
+.card {
+  position: relative;
+}
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 16px 40px rgb(0 0 0 / 0.3);
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+.card:hover::after {
+  opacity: 1; /* only opacity changes — no paint recalculation */
+}</code></pre>
+
+      <h3>text-shadow</h3>
+      <ul class="list-nosty">
+        <li><code>text-shadow</code> applies one or more shadows to the text content of an element. The syntax is the same as <code>box-shadow</code> minus the spread radius and the <code>inset</code> keyword — both are unsupported on text shadows. Values are: <code>offset-x offset-y blur-radius color</code>.</li>
+        <li>Like <code>box-shadow</code>, multiple shadows are comma-separated and stacked front-to-back. Layering a very tight, slightly-offset dark shadow under a softer wide shadow produces a more realistic depth than a single shadow.</li>
+        <li>A <code>blur-radius</code> of <code>0</code> with small offsets creates a solid "letterpress" or "emboss" effect. A large blur with no offset and a matching hue creates a glow effect around the text.</li>
+        <li>Contrast is critical — <code>text-shadow</code> alone should never substitute for sufficient color contrast between text and background. It can be used to improve legibility of light text on a complex image background, but always verify WCAG contrast ratios as well.</li>
+      </ul>
+      <pre><code>/* Simple drop shadow on a heading */
+h1 {
+  text-shadow: 2px 2px 4px rgb(0 0 0 / 0.4);
+}
+
+/* Glow effect — zero offsets, wide blur, matching hue */
+.neon {
+  color: #7df9ff;
+  text-shadow:
+    0 0 4px  #7df9ff,
+    0 0 16px #7df9ff,
+    0 0 40px #00bfff;
+}
+
+/* Embossed / letterpress — tight shadow, no blur */
+.embossed {
+  color: #444;
+  text-shadow: 0 1px 0 #fff;
+}
+
+/* White text on a complex image — shadow improves legibility */
+.hero-caption {
+  color: #fff;
+  text-shadow: 0 1px 6px rgb(0 0 0 / 0.6);
+}</code></pre>
+
+      <h3>opacity</h3>
+      <ul class="list-nosty">
+        <li><code>opacity</code> sets the transparency of the entire element and all of its descendants as a group — values range from <code>0</code> (fully transparent) to <code>1</code> (fully opaque). Decimal and percentage values are both valid: <code>opacity: 0.5</code> and <code>opacity: 50%</code> are equivalent.</li>
+        <li>A key distinction from <code>rgba()</code> color values: <code>opacity</code> affects the whole rendered element including its children, borders, and shadows as a single composited unit. Using <code>background-color: rgba(0,0,0,0.5)</code> makes only the background transparent while child text remains fully opaque; <code>opacity: 0.5</code> makes everything — including child text — semi-transparent.</li>
+        <li>Any element with an <code>opacity</code> value less than <code>1</code> creates a new stacking context, the same way <code>position</code> + <code>z-index</code> does. This can affect the stacking order of overlapping elements.</li>
+        <li><code>opacity</code> is a GPU-composited property — it is safe to animate and transition without causing layout recalculation, making it ideal for fade-in/fade-out effects.</li>
+      </ul>
+      <pre><code>/* Disabled state — dims the whole button including its children */
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Hover to full opacity — transition is GPU-composited */
+.thumbnail {
+  opacity: 0.8;
+  transition: opacity 200ms ease;
+}
+.thumbnail:hover {
+  opacity: 1;
+}
+
+/* NOTE: opacity affects ALL children.
+   To make only the background transparent, use rgba() on the
+   background-color instead: */
+.overlay {
+  background-color: rgb(0 0 0 / 0.6); /* background transparent */
+  color: #fff;                          /* text stays fully opaque */
+}</code></pre>
+
+      <h3>CSS filter Functions</h3>
+      <p>The <code>filter</code> property applies graphical effects to an element and all of its content. Per MDN, filters are applied in the order they are listed — this matters because each function receives the output of the previous one, not the original element. Multiple filters are space-separated in a single <code>filter</code> declaration.</p>
+      <ul class="list-nosty">
+        <li><code>blur(radius)</code> — applies a Gaussian blur. The argument must be a CSS length unit (<code>px</code>, <code>rem</code>, etc.) — percentages are not accepted. Larger values produce more blur. A value of <code>0</code> leaves the element unchanged. Commonly used for out-of-focus background effects.</li>
+        <li><code>brightness(amount)</code> — multiplies the brightness of each pixel. <code>100%</code> (or <code>1</code>) is unchanged; <code>0%</code> produces a fully black element; values above <code>100%</code> are allowed and produce a brighter result. Accepts a number or percentage.</li>
+        <li><code>contrast(amount)</code> — adjusts contrast. <code>100%</code> is unchanged; <code>0%</code> produces a flat grey; values above <code>100%</code> increase contrast beyond the original.</li>
+        <li><code>grayscale(amount)</code> — converts color to greyscale. <code>100%</code> or <code>1</code> is fully greyscale; <code>0%</code> is unchanged. Useful for desaturating images on hover or for a "disabled" visual treatment that avoids the flat look of <code>opacity</code>.</li>
+        <li><code>sepia(amount)</code> — converts color to a warm brown sepia tone, like an old photograph. <code>100%</code> or <code>1</code> is fully sepia; <code>0%</code> is unchanged. Omitting the argument is equivalent to <code>100%</code>.</li>
+        <li><code>hue-rotate(angle)</code> — rotates every color on the element around the HSL color wheel by the given angle. <code>0deg</code> is unchanged; <code>180deg</code> inverts hues. Accepts <code>deg</code>, <code>rad</code>, and <code>turn</code> units. Useful for creating color-shifted variants of an image without editing the asset.</li>
+        <li><code>invert(amount)</code> — inverts colors. <code>100%</code> completely inverts; <code>0%</code> is unchanged. A value of <code>100%</code> on a greyscale image produces a photo-negative effect.</li>
+        <li><code>saturate(amount)</code> — adjusts color saturation. <code>100%</code> is unchanged; <code>0%</code> removes all color (equivalent to <code>grayscale(100%)</code>); values above <code>100%</code> produce an oversaturated result.</li>
+        <li><code>opacity(amount)</code> — works like the <code>opacity</code> property. Per MDN, some browsers provide hardware acceleration specifically for <code>filter: opacity()</code>; in practice, for simple fades, the standalone <code>opacity</code> property is recommended as it is universally composited.</li>
+        <li><code>drop-shadow(offset-x offset-y blur color)</code> — applies a shadow that follows the exact alpha channel of the element, not its bounding box. This is the key difference from <code>box-shadow</code>: on a PNG with a transparent background, <code>drop-shadow()</code> casts a shadow that traces the visible shape; <code>box-shadow</code> would shadow the full rectangle. Note that unlike <code>box-shadow</code>, <code>drop-shadow()</code> has no spread radius and no <code>inset</code> keyword.</li>
+        <li>Applying <code>filter</code> with any value other than <code>none</code> creates a new stacking context, the same way opacity does. Per MDN and CSS-Tricks, the filter has no effect on the element's box model geometry — it does not change layout, only painting.</li>
+      </ul>
+      <pre><code>/* Single filter */
+img.greyed {
+  filter: grayscale(100%);
+  transition: filter 300ms ease;
+}
+img.greyed:hover {
+  filter: grayscale(0%);
+}
+
+/* Stack multiple filters — order matters.
+   grayscale() receives the sepia() output, not the original. */
+.vintage {
+  filter: sepia(60%) contrast(110%) brightness(95%);
+}
+
+/* drop-shadow traces the PNG shape — box-shadow cannot do this */
+.icon-png {
+  filter: drop-shadow(4px 4px 6px rgb(0 0 0 / 0.4));
+}
+
+/* hue-rotate: shift colors across the wheel every frame */
+@media (prefers-reduced-motion: no-preference) {
+  .rainbow-icon {
+    animation: hue 4s linear infinite;
+  }
+}
+@keyframes hue {
+  to { filter: hue-rotate(360deg); }
+}
+
+/* Combining blur + brightness for a frosted glass image overlay */
+.hero-overlay {
+  filter: blur(2px) brightness(0.7);
+}</code></pre>
+
+      <h3>backdrop-filter</h3>
+      <ul class="list-nosty">
+        <li><code>backdrop-filter</code> accepts the same filter functions as <code>filter</code> but applies them only to whatever is rendered <em>behind</em> the element — not to the element itself. Per MDN, the element must have a semi-transparent background (e.g. <code>background: rgba(...)</code> or <code>background: transparent</code>) for the backdrop effect to be visible. A fully opaque background would simply cover the blurred backdrop entirely.</li>
+        <li>The most common use case is the "glassmorphism" / frosted-glass card pattern: set a low-opacity white or dark background on the card along with <code>backdrop-filter: blur()</code>, and the content behind the card will appear softly blurred while the card's own text stays sharp.</li>
+        <li>Multiple functions are space-separated, exactly like <code>filter</code>. Combining <code>blur()</code> and <code>saturate()</code> is a particularly effective pairing — it mimics the frosted-glass look of macOS and iOS by blurring and slightly boosting the color saturation of the background.</li>
+        <li>Performance: backdrop blur is GPU-accelerated but can be expensive when applied to large elements on devices with limited graphics memory. Avoid applying it to full-screen elements or rapidly resizing containers. Per the W3Schools effects page, avoid heavy filters on large background videos or images.</li>
+        <li>Always provide a solid-color fallback background for browsers that don't support <code>backdrop-filter</code>. Use <code>@supports (backdrop-filter: blur(1px)) { … }</code> to conditionally enable the transparent backdrop version.</li>
+      </ul>
+      <pre><code>/* Glassmorphism card — backdrop-filter blurs what's behind */
+.glass-card {
+  /* fallback for unsupported browsers */
+  background: rgb(255 255 255 / 0.85);
+  border-radius: 20px;
+  border: 1px solid rgb(255 255 255 / 0.3);
+}
+
+@supports (backdrop-filter: blur(1px)) {
+  .glass-card {
+    /* Only applied when the browser supports it.
+       The low-opacity background lets the blur show through. */
+    background: rgb(255 255 255 / 0.12);
+    backdrop-filter: blur(16px) saturate(120%);
+  }
+}
+
+/* Dark frosted panel over a hero image */
+.modal-overlay {
+  background: rgb(15 23 42 / 0.5);
+  backdrop-filter: blur(8px);
+}</code></pre>
+
+      <h3>Blend Modes</h3>
+      <p>CSS has two blend mode properties. Per MDN, <code>background-blend-mode</code> blends an element's background images and background color together; <code>mix-blend-mode</code> blends the element's entire rendered content with the content of its parent and the backdrop behind it.</p>
+      <ul class="list-nosty">
+        <li><code>background-blend-mode</code> — set on an element that has multiple background layers (multiple <code>background-image</code> values and/or a <code>background-color</code>). Each value in a comma-separated list maps to the corresponding background layer. Common use: blend a color wash over a photo without needing to edit the image asset.</li>
+        <li><code>mix-blend-mode</code> — set on an element to control how its painted output blends with whatever is behind it in the stacking context. It affects the whole element, including text and borders.</li>
+        <li><code>normal</code> — no blending; the top element simply covers the elements beneath it. This is the default.</li>
+        <li><code>multiply</code> — multiplies the color channels of the element and its backdrop. The result is always equal to or darker than either input. White areas become transparent; black areas stay black. Useful for placing a logo or illustration over a background without a white bounding box.</li>
+        <li><code>screen</code> — the inverse of <code>multiply</code>. Multiplies the complements of both layers and complements the result. The output is always lighter. Black areas become transparent; white areas stay white. Good for light-coloured overlays and lens-flare effects.</li>
+        <li><code>overlay</code> — combines <code>multiply</code> and <code>screen</code>: dark background areas get multiplied (darker), light areas get screened (lighter). Increases contrast while preserving highlights and shadows.</li>
+        <li><code>darken</code> / <code>lighten</code> — selects the darker or lighter value per channel from the two blended layers. Simpler than multiply/screen and useful for subtle tonal adjustments.</li>
+        <li><code>difference</code> — subtracts the darker color from the lighter one per channel. Produces a high-contrast inverted effect. White on the top layer inverts the bottom; black has no effect.</li>
+        <li><code>hue</code>, <code>saturation</code>, <code>color</code>, <code>luminosity</code> — the component blend modes from the CSS Compositing spec. They mix only the named component from one layer with the remainder from the other, enabling effects like duotones (set hue from a solid color, luminosity from a photo) or desaturation overlays.</li>
+        <li><code>isolation: isolate</code> — set on a container to create a new stacking context that prevents its children's <code>mix-blend-mode</code> from blending with elements outside the container. Per MDN, without <code>isolation</code> the blending extends to everything in the stacking context including ancestors, which can produce unintended results.</li>
+      </ul>
+      <pre><code>/* background-blend-mode: multiply a red wash over a photo.
+   The photo must be set as a background-image, not an <img>. */
+.photo-tint {
+  background-color: #e63946;
+  background-image: url("portrait.jpg");
+  background-size: cover;
+  background-blend-mode: multiply;
+}
+
+/* mix-blend-mode: knockout text through a background image.
+   White text + multiply = the image shows through the letterforms. */
+.knockout-text {
+  background-image: url("texture.jpg");
+  background-size: cover;
+  background-clip: text;           /* clips the bg to the text shape */
+  -webkit-background-clip: text;
+  color: transparent;              /* makes the text colour invisible */
+}
+
+/* mix-blend-mode: screen — removes black from a logo.
+   Any black areas become transparent, white areas stay white.
+   Use on light-on-dark logos placed over a coloured background. */
+.logo-light {
+  mix-blend-mode: screen;
+}
+
+/* isolation: isolate — prevents blending from bleeding to the page */
+.card-container {
+  isolation: isolate; /* children blend only within this container */
+}
+.card-container .overlay {
+  mix-blend-mode: overlay;
+}</code></pre>
+
+      <h3>Performance &amp; Accessibility Checklist</h3>
+      <ul class="list-nosty">
+        <li>Animate only <code>opacity</code> and <code>transform</code> for smooth, compositor-thread effects. Animating <code>filter</code>, <code>box-shadow</code>, or <code>backdrop-filter</code> directly can trigger paint recalculation every frame — if animation is needed, use the <code>::after</code> opacity trick shown in the <code>box-shadow</code> examples above.</li>
+        <li>Apply <code>backdrop-filter</code> and <code>filter: blur()</code> to the smallest surface area possible. Large blurred surfaces are expensive on low-powered GPUs — avoid them on full-viewport backgrounds or inside frequently animated containers.</li>
+        <li>Always ensure text remains readable after applying effects. Filters that reduce contrast (<code>brightness()</code>, <code>opacity()</code>), blend modes that darken or wash out text, and heavy blurs behind poorly-contrasted text can all fail WCAG AA contrast requirements. Test with real content at real sizes.</li>
+        <li>Provide solid-color fallbacks for <code>backdrop-filter</code> using <code>@supports</code>. Firefox required a flag until version 103; ensure the fallback looks intentional rather than broken.</li>
+        <li>Blend modes and <code>mix-blend-mode</code> create new stacking contexts. If z-index layering behaves unexpectedly after applying a blend mode, check whether a new stacking context is the cause.</li>
+      </ul>
+    </section>
+    <section class="card red-card shadow">
+      <h2>Web Accessibility</h2>
+      <p>Accessibility means building pages that can be used by everyone — including people who navigate by keyboard, use screen readers, have low vision, or have cognitive disabilities. Most accessibility wins come from using HTML correctly and understanding a small set of rules. Per the W3Schools accessibility guide, the goal is to provide the user a good way to navigate and interact with your site using HTML that is as semantic as possible.</p>
+
+      <h3>Semantic HTML First</h3>
+      <ul class="list-nosty">
+        <li>Semantic elements carry meaning about their content and role. Using the right element for the right purpose — <code>&lt;button&gt;</code> for buttons, <code>&lt;nav&gt;</code> for navigation, <code>&lt;main&gt;</code> for the primary content — gives assistive technologies the information they need to present that content correctly. Per web.dev, using semantic HTML means you do less work and have better-performing code because the browser handles keyboard interaction, focus, and ARIA semantics for you automatically.</li>
+        <li>Never use a <code>&lt;div&gt;</code> or <code>&lt;span&gt;</code> as a button or link. A <code>&lt;div&gt;</code> is not focusable by keyboard, does not fire click events on Enter or Space, and reports no role to screen readers. Using <code>&lt;button&gt;</code> gives you all three for free.</li>
+        <li>HTML landmark elements — <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;aside&gt;</code>, <code>&lt;footer&gt;</code>, <code>&lt;section&gt;</code> — map directly to ARIA landmark roles. Per the W3Schools accessibility landmarks guide, screen reader users can jump directly between landmarks to navigate the page structure. Use only one <code>&lt;main&gt;</code> per page. When multiple landmarks of the same type exist (e.g. two <code>&lt;nav&gt;</code> elements), label each with <code>aria-label</code> so they can be distinguished.</li>
+        <li>Maintain a strict heading hierarchy: one <code>&lt;h1&gt;</code> per page, followed by <code>&lt;h2&gt;</code>s for major sections, then <code>&lt;h3&gt;</code>s for sub-sections. Screen reader users frequently navigate a page by jumping between headings — skipping levels (e.g. going from <code>&lt;h2&gt;</code> to <code>&lt;h4&gt;</code>) breaks that navigation model. Choose heading levels for document structure, not font size.</li>
+      </ul>
+      <pre><code>&lt;!-- Wrong: a div masquerading as a button. Not keyboard focusable,
+     no role exposed, no Enter/Space activation. --&gt;
+&lt;div class="btn" onclick="submit()"&gt;Submit&lt;/div&gt;
+
+&lt;!-- Right: native button. Focusable, activatable by keyboard,
+     announces "Submit, button" to screen readers. --&gt;
+&lt;button type="button" onclick="submit()"&gt;Submit&lt;/button&gt;
+
+&lt;!-- Multiple nav elements: label each so users can tell them apart --&gt;
+&lt;nav aria-label="Primary"&gt;...&lt;/nav&gt;
+&lt;nav aria-label="Breadcrumb"&gt;...&lt;/nav&gt;
+&lt;nav aria-label="Footer"&gt;...&lt;/nav&gt;</code></pre>
+
+      <h3>ARIA — Roles, Names, and States</h3>
+      <p>WAI-ARIA (Accessible Rich Internet Applications) is a set of HTML attributes that supplement semantic meaning when native HTML elements are insufficient. Per the W3C WAI-ARIA overview, ARIA provides roles to describe widget types, properties to describe state, and a way to convey live updates. The first rule of ARIA use is: if you can use a native HTML element with the semantics and behaviour built in, do that instead.</p>
+      <ul class="list-nosty">
+        <li><code>role</code> — overrides or supplies the element's semantic type as exposed to assistive technologies. Common landmark roles (<code>role="navigation"</code>, <code>role="main"</code>, <code>role="banner"</code>, <code>role="contentinfo"</code>) are automatically mapped from the corresponding HTML elements. Use explicit roles only when no suitable HTML element exists, or when you need to communicate a widget pattern not expressible in HTML alone (e.g. <code>role="tablist"</code>, <code>role="dialog"</code>, <code>role="progressbar"</code>).</li>
+        <li><code>aria-label</code> — provides an accessible name for an element when no visible text label is present or when the visible label is insufficient. Common uses: icon-only buttons (<code>&lt;button aria-label="Close dialog"&gt;</code>), search inputs without a visible <code>&lt;label&gt;</code>, and landmark regions that need distinction. Per MDN, <code>aria-label</code> overrides any text content inside the element as the accessible name.</li>
+        <li><code>aria-labelledby</code> — points to the <code>id</code> of another element whose text serves as the accessible name. Stronger than <code>aria-label</code> when a visible heading already describes the region: <code>&lt;section aria-labelledby="section-heading"&gt;</code>. Multiple IDs can be space-separated to combine several elements into one accessible name.</li>
+        <li><code>aria-describedby</code> — points to the <code>id</code> of an element that provides supplementary description (not the name). Used to associate hint text, error messages, or instructions with a form field. Screen readers announce the name first, then the description after a short pause.</li>
+        <li><code>aria-expanded</code> — communicates whether a collapsible widget (accordion, dropdown, disclosure) is open or closed. Must be updated in JavaScript as the state changes. Per the W3Schools role/name/value guide, an accordion button needs <code>aria-expanded="false"</code> when collapsed and <code>"true"</code> when open so screen readers can announce the current state.</li>
+        <li><code>aria-hidden="true"</code> — removes an element and all its descendants from the accessibility tree entirely. Use it on decorative icons, duplicated text, and elements that are visually hidden but not yet relevant. Never apply it to an element that is, or contains, focusable content — a keyboard user could tab into a hidden element and become stranded.</li>
+        <li><code>aria-live</code> — marks a region whose content updates dynamically (toast notifications, chat messages, error banners) so screen readers announce changes without the user having to navigate to that region. <code>aria-live="polite"</code> waits for the user to finish their current action before announcing; <code>aria-live="assertive"</code> interrupts immediately and should be reserved for critical errors only.</li>
+      </ul>
+      <pre><code>&lt;!-- Icon button: aria-label provides the accessible name
+     because there is no visible text --&gt;
+&lt;button aria-label="Close dialog"&gt;
+  &lt;svg aria-hidden="true" focusable="false"&gt;...&lt;/svg&gt;
+&lt;/button&gt;
+
+&lt;!-- Accordion: role + aria-expanded communicate widget state --&gt;
+&lt;button
+  aria-expanded="false"
+  aria-controls="panel-1"
+  id="header-1"&gt;
+  When do I get charged?
+&lt;/button&gt;
+&lt;div id="panel-1" role="region" aria-labelledby="header-1" hidden&gt;
+  You are charged when the ride ends.
+&lt;/div&gt;
+
+&lt;!-- Live region: announces status messages to screen readers
+     without requiring the user to navigate to it --&gt;
+&lt;div aria-live="polite" aria-atomic="true" class="sr-only"&gt;
+  &lt;!-- Inject status text here via JavaScript --&gt;
+&lt;/div&gt;</code></pre>
+
+      <h3>Keyboard Navigation &amp; tabindex</h3>
+      <p>Every interactive element on the page must be reachable and operable by keyboard alone — this is a hard WCAG Level A requirement (Success Criterion 2.1.1). Per the Grizzly Peak accessibility guide, the test is simple: unplug your mouse and use Tab, Shift+Tab, Enter, Space, and arrow keys to navigate. If you cannot complete every task, you have a problem.</p>
+      <ul class="list-nosty">
+        <li>Native interactive elements — <code>&lt;a href&gt;</code>, <code>&lt;button&gt;</code>, <code>&lt;input&gt;</code>, <code>&lt;select&gt;</code>, <code>&lt;textarea&gt;</code> — are keyboard-focusable and activatable by default with no extra work required. This is the single strongest argument for using semantic HTML over custom widgets.</li>
+        <li><code>tabindex="0"</code> — inserts a non-interactive element into the natural tab order at its position in the DOM. Use this sparingly on custom interactive elements that are not natively focusable (e.g. a <code>&lt;div&gt;</code> with <code>role="button"</code>). If you find yourself doing this often, it is usually a sign that a native element should be used instead.</li>
+        <li><code>tabindex="-1"</code> — removes an element from the tab order but keeps it programmatically focusable via JavaScript (<code>element.focus()</code>). This is the correct value for elements that should receive focus only under script control — modal dialog content, skip link targets, and drawer panels — not elements the user should tab through directly.</li>
+        <li>Never use positive <code>tabindex</code> values (e.g. <code>tabindex="3"</code>). Per the Grizzly Peak accessibility guide, positive values create a separate tab sequence that runs before the natural DOM order, producing a confusing navigation path that is nearly impossible to maintain as a page grows. If the DOM order is wrong, fix the DOM order.</li>
+        <li>When a modal or dialog opens, focus must move into it — typically to the first focusable element or the dialog's heading. When it closes, focus must return to the element that triggered it. This is called focus management and is required for modals to be usable by keyboard and screen reader users.</li>
+        <li>Keyboard traps — situations where a keyboard user cannot move focus out of a component — are a WCAG 2.1.2 failure. The one exception is intentional modal trapping: focus must be contained within an open modal so the user cannot interact with background content while it is open, but Escape must always close the modal and return focus.</li>
+      </ul>
+      <pre><code>/* Visible focus styles: never remove the outline without replacing it.
+   :focus-visible shows the ring only for keyboard navigation,
+   not on mouse clicks, satisfying both visual design and accessibility. */
+:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Remove the default outline only after providing a custom one */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Utility class for screen-reader-only text.
+   Positions content off-screen rather than using display:none
+   so it remains in the accessibility tree and receives focus. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}</code></pre>
+
+      <h3>Skip Links</h3>
+      <ul class="list-nosty">
+        <li>A skip link is an anchor placed as the very first focusable element on the page that, when activated, moves focus past the navigation to the main content. It prevents keyboard and screen reader users from having to tab through every nav item on every page load. Per the W3Schools accessibility guide, it is one of the most impactful single fixes you can make.</li>
+        <li>Skip links are typically visually hidden by default and revealed only when focused — this is acceptable because sighted keyboard users will see them when they tab to them, while mouse users never need them.</li>
+        <li>The skip link's <code>href</code> must point to an element with a matching <code>id</code>. That target element should have <code>tabindex="-1"</code> applied so that when the skip link sends focus there, it actually lands on the element rather than being skipped. Without <code>tabindex="-1"</code>, some browsers do not move keyboard focus even though the viewport scrolls.</li>
+      </ul>
+      <pre><code>&lt;!-- First focusable element in the document --&gt;
+&lt;a href="#main-content" class="skip-link"&gt;Skip to main content&lt;/a&gt;
+
+&lt;nav aria-label="Primary"&gt;...&lt;/nav&gt;
+
+&lt;!-- tabindex="-1" ensures focus lands here when the skip link
+     is activated, even in browsers that don't natively focus
+     non-interactive elements --&gt;
+&lt;main id="main-content" tabindex="-1"&gt;...&lt;/main&gt;
+
+/* CSS: hide visually, reveal on focus */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  padding: 12px 20px;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 700;
+  z-index: 9999;
+  text-decoration: none;
+  border-radius: 0 0 8px 0;
+  transition: top 0.1s ease;
+}
+.skip-link:focus {
+  top: 0;
+}</code></pre>
+
+      <h3>Color Contrast &amp; Color Meaning</h3>
+      <ul class="list-nosty">
+        <li>WCAG 2.1 Success Criterion 1.4.3 (Level AA) requires a minimum contrast ratio of 4.5:1 between text and its background for body text, and 3:1 for large text (defined as 18pt normal weight or 14pt bold and above). Per the W3Schools accessibility page, test every text and background color pair with a contrast checker before shipping.</li>
+        <li>WCAG 2.1 Success Criterion 1.4.11 (Level AA) extends the 3:1 requirement to non-text contrast — interactive UI components (button borders, input outlines, focus indicators) and meaningful graphical elements must also meet a 3:1 ratio against adjacent colors.</li>
+        <li>Color must never be the only way information is conveyed — this is WCAG 1.4.1. Per the W3Schools accessibility page, if you use red to indicate a required form field or green to indicate success, you must also add an icon, a text label, or a pattern so the information is available to users who are color-blind or who cannot distinguish those hues. Approximately 8% of men and 0.5% of women have some form of color vision deficiency.</li>
+        <li>Use browser DevTools' accessibility panel or dedicated tools like the WebAIM Contrast Checker to audit contrast ratios. The <code>forced-colors: active</code> media query can be used in CSS to provide fallback styles for Windows High Contrast Mode, where the OS overrides all colors.</li>
+      </ul>
+      <pre><code>/* Accessible focus ring that meets 3:1 non-text contrast */
+:focus-visible {
+  outline: 3px solid #1d4ed8; /* verified 4.5:1+ against white */
+  outline-offset: 3px;
+}
+
+/* Error state: color + icon + text label — not color alone */
+.field-error input {
+  border-color: #dc2626;
+}
+.field-error .hint::before {
+  content: "⚠ "; /* icon supplements the color cue */
+}
+.field-error .hint {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+/* High Contrast Mode: use system color keywords instead of
+   fighting the OS override */
+@media (forced-colors: active) {
+  .btn {
+    border: 2px solid ButtonText;
+  }
+}</code></pre>
+
+      <h3>Images, Video &amp; Audio</h3>
+      <ul class="list-nosty">
+        <li>Every <code>&lt;img&gt;</code> must have an <code>alt</code> attribute — omitting it entirely is invalid HTML and causes screen readers to announce the filename instead. Per the W3Schools accessibility page, <code>alt</code> text should explain the <em>purpose</em> of the image in context, not just describe what it looks like. Ask: if this image were removed, what information would be lost?</li>
+        <li>Decorative images that add no information — dividers, background textures, purely aesthetic illustrations — should use an empty <code>alt=""</code>. This tells screen readers to skip the element entirely. Do not use a space (<code>alt=" "</code>) — some screen readers announce the space as content.</li>
+        <li>Complex images such as charts, diagrams, and infographics need a more complete description than a short <code>alt</code> string can provide. Per MDN, use a <code>&lt;figure&gt;</code> with a <code>&lt;figcaption&gt;</code> for a visible long description, or use <code>aria-describedby</code> to link the image to a separate descriptive paragraph.</li>
+        <li>For <code>&lt;video&gt;</code> elements, provide closed captions via a <code>&lt;track kind="captions"&gt;</code> element for users who are deaf or hard of hearing, and a text transcript for users who cannot receive any audio or video. For audio-only content, a transcript is the primary accessibility requirement.</li>
+        <li>Never use images of text — render text in HTML and CSS instead. Images of text cannot be resized cleanly, cannot be selected, cannot be translated, and fail contrast testing when the image is compressed.</li>
+      </ul>
+      <pre><code>&lt;!-- Informative image: alt describes the purpose --&gt;
+&lt;img src="sales-chart.png"
+     alt="Bar chart showing Q3 revenue up 18% year over year"&gt;
+
+&lt;!-- Decorative image: empty alt tells screen readers to skip it --&gt;
+&lt;img src="divider-wave.svg" alt=""&gt;
+
+&lt;!-- Complex image: short alt + long description via figcaption --&gt;
+&lt;figure&gt;
+  &lt;img src="network-diagram.png"
+       alt="Network architecture — full description below"&gt;
+  &lt;figcaption&gt;
+    Three tiers: a CDN edge layer, an application load balancer,
+    and two redundant app servers connected to a primary and
+    replica database pair.
+  &lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;!-- Video with captions track --&gt;
+&lt;video controls&gt;
+  &lt;source src="demo.mp4" type="video/mp4"&gt;
+  &lt;track kind="captions" src="captions-en.vtt"
+         srclang="en" label="English" default&gt;
+&lt;/video&gt;</code></pre>
+
+      <h3>Accessible Forms</h3>
+      <ul class="list-nosty">
+        <li>Every <code>&lt;input&gt;</code>, <code>&lt;select&gt;</code>, and <code>&lt;textarea&gt;</code> must have a programmatically associated <code>&lt;label&gt;</code>. Link them with matching <code>for</code> and <code>id</code> attributes. Per the W3Schools accessibility guide, never use <code>placeholder</code> alone as a label — placeholders disappear as soon as the user starts typing and fail the persistence requirement for accessible labels.</li>
+        <li>Group related controls — radio buttons, checkboxes — inside a <code>&lt;fieldset&gt;</code> with a <code>&lt;legend&gt;</code> as its first child. The legend provides the group question that gives each individual option its context. Without it, a screen reader user hears "Yes, radio button" with no way to know what the question was.</li>
+        <li>Use <code>aria-describedby</code> to associate hint text or format instructions with an input — screen readers will announce the hint after the label. Use <code>aria-invalid="true"</code> together with an error message linked via <code>aria-describedby</code> when a field fails validation. Do not rely on color or position alone to communicate errors.</li>
+        <li>Use the correct <code>type</code> attribute on inputs. <code>type="email"</code>, <code>type="tel"</code>, and <code>type="number"</code> trigger the appropriate mobile keyboard and help password managers and autofill identify the field's purpose. The <code>autocomplete</code> attribute enables browser and OS autofill — use values like <code>"email"</code>, <code>"name"</code>, <code>"current-password"</code> to map fields to their purpose (WCAG 1.3.5).</li>
+        <li>Never disable browser zoom. The viewport meta tag <code>maximum-scale=1</code> or <code>user-scalable=no</code> prevents users with low vision from enlarging the page and is a WCAG 1.4.4 failure. Per the Grizzly Peak accessibility guide, users with low vision need to zoom — do not take that away from them.</li>
+      </ul>
+      <pre><code>&lt;!-- Correct label association + hint text via aria-describedby --&gt;
+&lt;label for="email"&gt;Email address&lt;/label&gt;
+&lt;input type="email"
+       id="email"
+       name="email"
+       autocomplete="email"
+       aria-describedby="email-hint"&gt;
+&lt;span id="email-hint"&gt;We'll only use this to send your receipt.&lt;/span&gt;
+
+&lt;!-- Validation error: aria-invalid + linked error message --&gt;
+&lt;label for="username"&gt;Username&lt;/label&gt;
+&lt;input type="text"
+       id="username"
+       aria-invalid="true"
+       aria-describedby="username-error"&gt;
+&lt;span id="username-error" role="alert"&gt;
+  Username must be at least 4 characters.
+&lt;/span&gt;
+
+&lt;!-- Grouped radio buttons with fieldset + legend --&gt;
+&lt;fieldset&gt;
+  &lt;legend&gt;Preferred contact method&lt;/legend&gt;
+  &lt;label&gt;&lt;input type="radio" name="contact" value="email"&gt; Email&lt;/label&gt;
+  &lt;label&gt;&lt;input type="radio" name="contact" value="phone"&gt; Phone&lt;/label&gt;
+&lt;/fieldset&gt;
+
+&lt;!-- Never do this — it locks out low-vision users --&gt;
+&lt;!-- meta name="viewport" content="width=device-width, maximum-scale=1" --&gt;</code></pre>
+    </section>
+    <section class="card red-card shadow">
+      <h2>Design Systems</h2>
+      <p>A design system unifies design and development with shared foundations, reusable components, and documented standards. HTML and CSS provide the blueprint for consistent interfaces across an entire product.</p>
+
+      <h3>Design Tokens</h3>
+      <ul class="list-nosty">
+        <li>Design tokens are named values — such as <code>--color-primary</code> or <code>--spacing-lg</code> — that encode every decision about color, typography, spacing, border-radius, and elevation into a single source of truth. Storing them as CSS custom properties means a one-line change updates every component that references the token, instead of a search-and-replace across dozens of files.</li>
+        <li>Define all tokens at <code>:root</code> so they cascade to every element. Group them by category in a dedicated <code>tokens.css</code> file that is loaded first in dependency order. For cross-platform use (web + mobile + design tools), maintain the canonical token values as JSON and generate the CSS and platform-specific outputs from that single source via a token pipeline.</li>
+        <li>Document responsive breakpoints, grid column counts, and gutter sizes as tokens too — this prevents hardcoded magic numbers from leaking into component stylesheets. Motion tokens (<code>--duration-fast: 150ms</code>, <code>--easing-standard: ease-out</code>) ensure every transition and animation across the system feels consistent.</li>
+      </ul>
+      <pre><code>/* tokens.css — loaded first, referenced everywhere */
+:root {
+  /* Color */
+  --color-primary:   #1d4ed8;
+  --color-surface:   #ffffff;
+  --color-text:      #111827;
+  --color-muted:     #6b7280;
+
+  /* Spacing scale */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-4:  1rem;
+  --space-8:  2rem;
+
+  /* Typography */
+  --font-sans:   system-ui, sans-serif;
+  --text-base:   1rem;
+  --text-lg:     1.125rem;
+  --leading-normal: 1.6;
+
+  /* Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-full: 9999px;
+
+  /* Motion */
+  --duration-fast:  150ms;
+  --easing-standard: ease-out;
+}
+
+/* A component consuming tokens — no hardcoded values */
+.btn-primary {
+  background: var(--color-primary);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  transition: background var(--duration-fast) var(--easing-standard);
+}</code></pre>
+
+      <h3>Component Library</h3>
+      <ul class="list-nosty">
+        <li>Each component should be a self-contained HTML + CSS unit: semantic markup as the structure, scoped CSS for styles, and a well-documented API of modifier classes for variants. A <code>.btn</code> base class handles the shared styles; <code>.btn--secondary</code>, <code>.btn--sm</code>, and <code>.btn--danger</code> layer on variations without duplicating code.</li>
+        <li>Include accessibility notes alongside every component: which ARIA roles and attributes it requires, what keyboard interactions it must support (Enter/Space for buttons, arrow keys for listboxes), and whether it needs a visible label or an <code>aria-label</code> fallback. A component with no accessibility spec is incomplete.</li>
+        <li>Provide states explicitly: default, hover, focus, active, disabled, loading, and error where applicable. Disabled elements should use the HTML <code>disabled</code> attribute (not just a CSS class) so they are excluded from focus order and correctly announced by screen readers. Error states must pair color with a text or icon cue — never color alone.</li>
+      </ul>
+      <pre><code>&lt;!-- Base + modifier class pattern --&gt;
+&lt;button class="btn btn--primary"&gt;Save&lt;/button&gt;
+&lt;button class="btn btn--secondary"&gt;Cancel&lt;/button&gt;
+&lt;button class="btn btn--primary btn--sm"&gt;Compact&lt;/button&gt;
+&lt;button class="btn btn--primary" disabled&gt;Submitting…&lt;/button&gt;
+
+/* Component CSS — all values pull from tokens */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--easing-standard),
+              outline-offset 80ms ease;
+}
+.btn:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 3px;
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.btn--primary  { background: var(--color-primary); color: #fff; }
+.btn--secondary { background: transparent; border-color: var(--color-primary); color: var(--color-primary); }
+.btn--sm { padding: var(--space-1) var(--space-2); font-size: 0.875rem; }</code></pre>
+
+      <h3>Documentation &amp; Governance</h3>
+      <ul class="list-nosty">
+        <li>Every component in the library needs written documentation: what it is for, when to use it versus an alternative, explicit do/don't examples, the full list of modifier classes and their effects, and copy-paste code snippets. Without documentation, the library is only usable by the people who built it.</li>
+        <li>Host the living documentation with a tool like Storybook (renders components in isolation with interactive controls), Zeroheight (bridges Figma designs to coded components), or a custom static site. The hosted docs should always reflect the latest published version of the library.</li>
+        <li>Establish a contribution and review process: how to propose a new component, who reviews it, what checklist it must pass (accessibility audit, cross-browser check, token usage, documentation) before it is merged. Version the library with semantic versioning — breaking changes should never land silently. Automate visual regression tests with tools like Chromatic or Percy to catch unintended CSS drift between releases.</li>
+      </ul>
+    </section>
+
+    <section class="card red-card shadow">
+      <h2>Performance</h2>
+      <p>Page performance directly affects user experience and search rankings. The browser must download, parse, and render HTML, CSS, fonts, and images before the user sees a usable page — every unnecessary byte and blocking resource adds latency.</p>
+
+      <h3>Critical Rendering Path</h3>
+      <ul class="list-nosty">
+        <li>The browser cannot render anything until it has built both the DOM (from HTML) and the CSSOM (from CSS). CSS is <strong>render-blocking</strong> by default — a stylesheet linked in <code>&lt;head&gt;</code> halts rendering until it is fully downloaded and parsed. Keep your CSS lean, load it early, and split large stylesheets into smaller files that can be conditionally loaded with <code>media</code> attributes (e.g., <code>media="print"</code> for print styles).</li>
+        <li>JavaScript without <code>defer</code> or <code>async</code> is also render-blocking <em>and</em> parser-blocking: the HTML parser stops, the script downloads, executes, then parsing resumes. Use <code>defer</code> for scripts that need the full DOM (they execute after parsing, in order). Use <code>async</code> only for truly independent scripts (analytics, ad tags) that do not depend on DOM order. Place all scripts at the end of <code>&lt;body&gt;</code> or in <code>&lt;head&gt;</code> with <code>defer</code> — never in the middle of the body without one of these attributes.</li>
+        <li>Inline the minimum CSS required to render above-the-fold content inside a <code>&lt;style&gt;</code> block in <code>&lt;head&gt;</code>. This eliminates the render-blocking network request for that critical CSS. Load the full stylesheet asynchronously with a <code>&lt;link rel="preload"&gt;</code> trick or a JavaScript-based loader. Keep inlined CSS to an absolute minimum — usually 1–3 KB uncompressed.</li>
+      </ul>
+      <pre><code>&lt;!-- Preload the main font so it's ready before text renders --&gt;
+&lt;link rel="preload" href="/fonts/inter.woff2" as="font"
+      type="font/woff2" crossorigin&gt;
+
+&lt;!-- Critical CSS inline — only above-the-fold styles --&gt;
+&lt;style&gt;
+  body { margin: 0; font-family: system-ui, sans-serif; }
+  .hero { min-height: 60svh; background: #1d4ed8; }
+&lt;/style&gt;
+
+&lt;!-- Non-critical stylesheet loaded asynchronously --&gt;
+&lt;link rel="preload" href="styles.css" as="style"
+      onload="this.onload=null;this.rel='stylesheet'"&gt;
+&lt;noscript&gt;&lt;link rel="stylesheet" href="styles.css"&gt;&lt;/noscript&gt;
+
+&lt;!-- Scripts: defer preserves order, executes after parsing --&gt;
+&lt;script src="app.js" defer&gt;&lt;/script&gt;</code></pre>
+
+      <h3>Images &amp; Asset Optimization</h3>
+      <ul class="list-nosty">
+        <li>Choose the right format for every image. Use <strong>WebP</strong> or <strong>AVIF</strong> for photos and complex graphics — they are 25–50% smaller than JPEG at equivalent quality and are supported in all modern browsers. Use SVG for icons, logos, and illustrations — SVGs are resolution-independent and can be styled with CSS. Use <code>&lt;picture&gt;</code> with <code>&lt;source type="image/avif"&gt;</code> and <code>&lt;source type="image/webp"&gt;</code> falling back to a <code>&lt;img&gt;</code> JPEG/PNG for maximum compatibility.</li>
+        <li>Add <code>loading="lazy"</code> to every <code>&lt;img&gt;</code> that is not in the initial viewport. The browser will defer downloading the image until the user scrolls close to it. Do <em>not</em> lazy-load the Largest Contentful Paint (LCP) image — typically the hero image — as this delays the most important visual element and hurts Core Web Vitals scores.</li>
+        <li>Always specify <code>width</code> and <code>height</code> attributes on <code>&lt;img&gt;</code> matching the image's natural dimensions. The browser uses these to reserve the correct amount of space before the image loads, eliminating Cumulative Layout Shift (CLS) — the jarring jump that occurs when images pop in and push content down.</li>
+        <li>Minify and compress all CSS, HTML, and JavaScript files before deploying. Enable Gzip or Brotli compression on your server — Brotli typically achieves 15–25% better ratios than Gzip. Use a CDN to serve assets from edge nodes geographically close to users, reducing round-trip time.</li>
+      </ul>
+      <pre><code>&lt;!-- Optimal image element: modern format, lazy, explicit dimensions --&gt;
+&lt;picture&gt;
+  &lt;source srcset="hero.avif" type="image/avif"&gt;
+  &lt;source srcset="hero.webp" type="image/webp"&gt;
+  &lt;img src="hero.jpg"
+       alt="A developer at a desk writing code"
+       width="1200" height="630"
+       loading="eager"&gt;  &lt;!-- hero: eager, not lazy --&gt;
+&lt;/picture&gt;
+
+&lt;!-- Below-fold images: lazy-load to defer network requests --&gt;
+&lt;img src="feature.webp"
+     alt="Screenshot of the dashboard"
+     width="800" height="450"
+     loading="lazy"&gt;</code></pre>
+
+      <h3>CSS Performance Patterns</h3>
+      <ul class="list-nosty">
+        <li>Prefer <code>transform</code> and <code>opacity</code> for all animations and transitions. These two properties are handled entirely by the GPU compositor and never trigger layout or paint. Animating <code>width</code>, <code>height</code>, <code>top</code>, <code>left</code>, <code>margin</code>, or <code>padding</code> forces the browser to recalculate layout on every frame, which is expensive and causes visible jank on lower-powered devices.</li>
+        <li>Avoid overly broad selectors that force the browser to evaluate many elements. Descendant combinators like <code>div p span</code> are evaluated right-to-left — the browser first finds every <code>&lt;span&gt;</code>, then checks if each one is inside a <code>&lt;p&gt;</code>, then inside a <code>&lt;div&gt;</code>. A single class like <code>.card-label</code> is faster and more maintainable.</li>
+        <li>Use <code>content-visibility: auto</code> on tall, off-screen sections (e.g., long article bodies, comment threads). The browser skips layout and paint for those sections until they approach the viewport, dramatically reducing initial render time on content-heavy pages. Pair it with <code>contain-intrinsic-size</code> to provide an estimated height so the scrollbar doesn't jump as sections are rendered.</li>
+      </ul>
+      <pre><code>/* GPU-composited: no layout recalculation on every frame */
+.slide-in {
+  transition: transform 300ms ease-out, opacity 300ms ease-out;
+}
+.slide-in.is-hidden {
+  transform: translateY(20px);
+  opacity: 0;
+}
+
+/* Defer rendering of long off-screen content */
+.article-body {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 600px; /* estimated height */
+}
+
+/* Avoid: triggers layout recalculation each frame */
+/* .panel { transition: height 0.3s ease; } */
+/* Use max-height trick or CSS Grid row transitions instead */</code></pre>
+    </section>
+
+    <section class="card red-card shadow">
+      <h2>Debugging &amp; Testing</h2>
+      <p>Finding and fixing HTML/CSS problems efficiently requires the right tooling, a systematic approach, and a set of techniques for isolating the source of broken layouts, unexpected specificity, or visual regressions.</p>
+
+      <h3>Browser DevTools</h3>
+      <ul class="list-nosty">
+        <li>The <strong>Elements panel</strong> (Chrome/Edge) or <strong>Inspector</strong> (Firefox) is the primary tool for HTML and CSS debugging. Click any element to see every CSS rule applied to it in source order, with overridden rules crossed out. The <strong>Computed</strong> tab shows the final resolved value for every property, including inherited values — indispensable when a property value is not what you expect.</li>
+        <li>The <strong>Styles panel</strong> lets you add, edit, and toggle declarations live without touching source files. Toggle individual declarations with the checkbox beside each rule to isolate which CSS is causing a problem. Add declarations directly in <code>element.style</code> to test a fix before writing it into a stylesheet. Use the <code>:hov</code> button to force <code>:hover</code>, <code>:focus</code>, and other pseudo-class states without interacting with the page.</li>
+        <li>In Chrome DevTools, open <strong>Layout</strong> in the Elements sidebar to visualize Flexbox and Grid overlays. Clicking the grid/flex icon beside a container in the Styles panel draws the track lines and gap areas directly over the page, making alignment and overlap issues immediately obvious.</li>
+        <li>The <strong>Accessibility tree</strong> panel shows exactly what screen readers see — the computed role, name, and state of every element. Use it to verify that <code>aria-label</code>, <code>aria-labelledby</code>, and role assignments are working as intended before testing with an actual screen reader.</li>
+      </ul>
+      <pre><code>/* DevTools trick: temporary red outline on every element
+   to visualize the box model and spot overflow */
+* { outline: 1px solid red !important; }
+
+/* Or: highlight only overflowing elements */
+* { overflow: visible !important; outline: 2px dashed magenta; }
+
+/* Useful while debugging: make all elements' boxes visible */
+.debug * {
+  background: rgb(255 0 0 / 0.05) !important;
+  outline: 1px solid rgb(255 0 0 / 0.3) !important;
+}</code></pre>
+
+      <h3>HTML &amp; CSS Validation</h3>
+      <ul class="list-nosty">
+        <li>Run your HTML through the <a href="https://validator.w3.org" target="_blank" rel="noreferrer" class="btn btn-red">W3C Markup Validator</a> regularly. Many layout bugs are caused by invalid nesting — a <code>&lt;div&gt;</code> inside a <code>&lt;p&gt;</code>, a <code>&lt;td&gt;</code> without a parent <code>&lt;tr&gt;</code>, or unclosed tags — that browsers silently auto-correct in unpredictable ways. The validator surfaces these before they become hard-to-diagnose rendering inconsistencies across different browsers.</li>
+        <li>For CSS, use the <strong>W3C CSS Validation Service</strong> or enable <strong>CSS Lint</strong> / <strong>Stylelint</strong> in your editor. Stylelint can enforce no-duplicate-selectors, no-descending-specificity, property ordering conventions, and token usage rules — catching problems at write-time rather than in the browser.</li>
+        <li>Run <strong>Lighthouse</strong> (built into Chrome DevTools under the Audits/Lighthouse tab) to get scored reports on performance, accessibility, best practices, and SEO. Each failed audit includes a direct explanation and a link to the relevant guidance. Fix Lighthouse issues before deploying — they surface missing <code>alt</code> text, insufficient contrast ratios, missing viewport tags, render-blocking resources, and more.</li>
+      </ul>
+
+      <h3>Cross-Browser &amp; Responsive Testing</h3>
+      <ul class="list-nosty">
+        <li>Use the DevTools <strong>device toolbar</strong> (Ctrl/Cmd+Shift+M in Chrome) for rapid responsive testing — it emulates viewport dimensions and touch events. However, emulation is not the same as a real device: test on physical hardware for real performance, font rendering, and touch behavior whenever possible.</li>
+        <li>Check your pages in at least Chrome, Firefox, and Safari. Safari (WebKit) regularly lags on implementing newer CSS features and has historically been the source of flexbox, grid, and scroll-related bugs. Use <a href="https://caniuse.com" target="_blank" rel="noreferrer" class="btn btn-red">caniuse.com</a> to check browser support before using any CSS property not in your pre-existing toolkit.</li>
+        <li>For systematic cross-browser and cross-device testing, services like BrowserStack or LambdaTest provide real browser instances in the cloud. Use visual regression tools (Chromatic, Percy, or Playwright's screenshot comparison) in CI to automatically flag layout changes between code deployments.</li>
+      </ul>
+    </section>
+
+    <section class="card red-card shadow">
+      <h2>Tooling &amp; Automation</h2>
+      <p>Modern front-end tooling automates repetitive tasks — compiling, bundling, linting, formatting, and deploying — so you can focus on writing good HTML and CSS rather than managing files by hand.</p>
+
+      <h3>CSS Preprocessors &amp; PostCSS</h3>
+      <ul class="list-nosty">
+        <li><strong>Sass/SCSS</strong> extends CSS with variables, nesting, mixins, functions, and partials (files prefixed with <code>_</code> that are imported into a main file). Sass compiles to plain CSS before the browser ever sees it. Most of what Sass offered for variables and nesting is now possible in plain CSS with custom properties and native nesting — but Sass remains valuable for its <code>@each</code> loops, <code>@mixin</code>/<code>@include</code> patterns, and large project organization tools like <code>@use</code> and <code>@forward</code>.</li>
+        <li><strong>PostCSS</strong> is a CSS transformation tool powered by plugins. <code>Autoprefixer</code> automatically adds vendor prefixes (<code>-webkit-</code>, <code>-moz-</code>) based on a target browser list from <code>browserslist</code>, so you never have to write them by hand. <code>postcss-preset-env</code> lets you write future CSS syntax today and compiles it down to what target browsers currently support — similar to Babel for JavaScript.</li>
+        <li>CSS Modules (used with bundlers like Webpack or Vite) automatically scope all class names to the component file that defines them, eliminating global namespace collisions without any naming convention discipline. The class <code>.button</code> in <code>Card.module.css</code> becomes something like <code>.Card_button__abc12</code> in the output, guaranteeing it will never clash with a <code>.button</code> in another file.</li>
+      </ul>
+      <pre><code>/* SCSS: variables, nesting, and a mixin in one block */
+$primary: #1d4ed8;
+$radius: 8px;
+
+@mixin focus-ring($color: $primary) {
+  &:focus-visible {
+    outline: 3px solid $color;
+    outline-offset: 3px;
+  }
+}
+
+.btn {
+  background: $primary;
+  border-radius: $radius;
+  @include focus-ring();
+
+  &:hover { background: darken($primary, 10%); }
+  &--sm   { padding: 0.25rem 0.5rem; font-size: 0.875rem; }
+}</code></pre>
+
+      <h3>Bundlers &amp; Build Tools</h3>
+      <ul class="list-nosty">
+        <li><strong>Vite</strong> is the current dominant choice for new projects. It serves files via native ES modules during development (no bundling step — near-instant HMR), then uses Rollup for an optimized production build. Its CSS handling is built-in: it processes SCSS, PostCSS, and CSS Modules out of the box with minimal configuration.</li>
+        <li><strong>Webpack</strong> remains common in large, existing codebases due to its mature ecosystem. CSS is processed through <code>css-loader</code> (resolves <code>@import</code> and <code>url()</code>) and <code>style-loader</code> (injects styles into the DOM) or <code>MiniCssExtractPlugin</code> (extracts CSS to a separate file for production). Configuration is verbose compared to Vite but extremely flexible.</li>
+        <li>For pure static sites or simple projects, a lightweight approach using PostCSS CLI with Autoprefixer, a CSS minifier like <code>cssnano</code>, and an HTML minifier is perfectly sufficient — no bundler required. Add a <code>package.json</code> <code>scripts</code> block to chain these commands and run them with <code>npm run build</code>.</li>
+      </ul>
+      <pre><code>// vite.config.js — minimal setup with SCSS and PostCSS
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  css: {
+    preprocessorOptions: {
+      scss: { additionalData: '@use "src/tokens" as *;' }
+    },
+    postcss: './postcss.config.js'
+  }
+});
+
+// postcss.config.js
+export default {
+  plugins: [
+    require('autoprefixer'),
+    require('cssnano')({ preset: 'default' })
+  ]
+};</code></pre>
+
+      <h3>Linting, Formatting &amp; CI</h3>
+      <ul class="list-nosty">
+        <li><strong>Stylelint</strong> lints CSS (and SCSS) for errors and convention violations. Configure it with <code>.stylelintrc.json</code> — useful rules include <code>no-duplicate-selectors</code>, <code>no-descending-specificity</code>, <code>color-no-invalid-hex</code>, <code>declaration-block-no-shorthand-property-overrides</code>, and a custom <code>custom-properties-pattern</code> to enforce your token naming convention. Run it in CI so non-conforming CSS cannot be merged.</li>
+        <li><strong>Prettier</strong> formats HTML and CSS automatically and consistently on every save. Pair it with an editor plugin (VS Code's Prettier extension) and a <code>pre-commit</code> hook via <strong>lint-staged</strong> + <strong>Husky</strong> so code is always formatted before it enters version control. This eliminates style debates in code review entirely — formatting is never a human decision.</li>
+        <li>A minimal CI pipeline for a CSS-heavy project should run: install → lint (Stylelint + HTML validator) → build → visual regression test → deploy to a preview URL for review. Store the pipeline in <code>.github/workflows/ci.yml</code> (GitHub Actions) or an equivalent. Every pull request should produce a preview deployment so reviewers can check the visual output in a real browser, not just read a diff.</li>
+      </ul>
+      <pre><code># .github/workflows/ci.yml — minimal HTML/CSS CI pipeline
+name: CI
+on: [push, pull_request]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm ci
+      - run: npm run lint        # stylelint + eslint
+      - run: npm run build       # vite build
+      - run: npm run test:visual # playwright screenshot diff</code></pre>
     </section>
   </main>
   <footer class="blurred-gradient">
